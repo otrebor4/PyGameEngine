@@ -6,12 +6,30 @@ Created on Feb 27, 2014
 import game.util.Vector2 as Vector2
 
 class Transform:
+    
     def __init__(self):
         self._local_position = Vector2.Zero
         self._parent = None
-        #self.position = (0,0)
-        #self.localPosition = (0,0)
-        #self.parent = None
+        self._childs = []
+        
+    def _addChild(self,value):
+        if value not in self._childs:
+            self._childs.append(value)
+    def _removeChild(self,value):
+        if value in self._childs:
+            self._childs.remove(value)
+            
+            
+    @property
+    def parent(self):
+        return self._parent
+    @parent.setter
+    def parent(self,value):
+        if self.parent:
+            self._parent._removeChild(self) 
+        self._parent = value
+        if self._parent:
+            self._parent._addChild(self)
     
     @property
     def localPosition(self):
@@ -37,3 +55,6 @@ class Transform:
     @property
     def rotation(self):
         return self._rotation
+    @rotation.setter
+    def rotation(self,value):
+        pass
