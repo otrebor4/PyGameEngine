@@ -7,11 +7,11 @@ import pygame
 import Resources
 import game.components.Collider as Collider
 import base.GameObject as GameObject
-import game.phys.physutil as util
+#import game.phys.physutil as util
 import game.util.Vector2 as Vector2
 import util.graph as graph
 import game.lib.yaml as yaml
-import scripts.CreateMap as CreateMap
+#import scripts.CreateMap as CreateMap
 import game.components.LightSource as LightSource
 import game.util.NavMesh as NavMesh
 
@@ -197,15 +197,15 @@ class Terrain(yaml.YAMLObject):
                     if 'radius' in info.keys():
                         light.radius = int(info['radius'])
                         
-                if 'sink' in info.keys():
-                    sink = block.addComponent(CreateMap.Sink)
-                    if 'damage' in info.keys():
-                        sink.damage = float(info['damage'])
-                elif 'damage' in info.keys():
-                    damage = block.addComponent(CreateMap.Damage)
-                    damage.damage = float(info['damage'])    
-                elif 'goal' in info.keys():
-                    block.addComponent(CreateMap.Goal)
+                #if 'sink' in info.keys():
+                #    sink = block.addComponent(CreateMap.Sink)
+                #    if 'damage' in info.keys():
+                #        sink.damage = float(info['damage'])
+                #elif 'damage' in info.keys():
+                #    damage = block.addComponent(CreateMap.Damage)
+                #    damage.damage = float(info['damage'])    
+                #elif 'goal' in info.keys():
+                #    block.addComponent(CreateMap.Goal)
                     
                     
     def toVector2(self, poly):
