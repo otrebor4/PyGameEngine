@@ -26,6 +26,7 @@ class Polygon(Shape.Shape):
                      min([pt.y for pt in self.corners]),
                      max([pt.x for pt in self.corners]),
                      max([pt.y for pt in self.corners]))
+        
     def rotate(self,angle):
         corners = []
         for point in self.corners:
@@ -44,8 +45,8 @@ class Polygon(Shape.Shape):
         points = []
         for i in range(0, len(self.corners)):
             points.append(self.corners[i].add(self.position))
-        
         return points
+    
     def getXYPoints(self):
         points = []
         for i in range(0, len(self.corners)):
@@ -56,20 +57,12 @@ class Polygon(Shape.Shape):
     def Points(self):
         return self.getXYPoints()
         
-        
     def draw(self, screen):
         points = self.getXYPoints()
         for i in range(-1,len(points)-1):
-            pygame.draw.line(screen,(250,0,0,100), points[i],points[i+1] ) #(screen, (250,0,100), self.getXYPoints())
+            pygame.draw.line(screen,(250,0,0,100), points[i],points[i+1] ) 
             
-        #s = pygame.Surface([self.Width(), self.Height()], pygame.SRCALPHA, 32)
-        #s.fill((250, 0, 0, 100))
-        
-        
-        #screen.blit(scr, (self.Left(), self.Top()))
-        pass
-
-def getPoligonFromPoints(pts):
+def getPolygonFromPoints(pts):
     vectors = []
     if len(pts) == 0:
         return vectors

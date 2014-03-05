@@ -216,6 +216,8 @@ Down  = Vector2(0,-1)
 Left  = Vector2(-1,0)
 Right = Vector2(1,0)
 
+'''
+Testing purposes...
 if __name__ == '__main__':
     v1 = Vector2(1,0)
     v2 = Vector2(1,-1)
@@ -228,3 +230,4 @@ if __name__ == '__main__':
     print v1.rotate(45).angle()
     print v1.rotate(180).angle()
     print v1.rotate(281).angle()
+'''

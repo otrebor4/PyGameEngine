@@ -9,7 +9,7 @@ import GameObject
 import game.components.Render as Render
 import game.components.Collider as Collider
 
-
+#creates game object of circle type
 class CircleObject(GameObject.GameObject):
     yaml_tag = u'!CircleObject'
     def __init__(self, world, x, y, r, collor):
@@ -17,7 +17,7 @@ class CircleObject(GameObject.GameObject):
         Collider.CircleCollider(self, x, y, r)
         render = self.addComponent(CircleRender)
         render.color = collor
-        
+  
 class CircleRender(Render.Render):
     yaml_tag = u'!CircleRender'
     def __getstate__(self):
@@ -28,7 +28,6 @@ class CircleRender(Render.Render):
     def __init__(self, gameObject):
         Render.Render.__init__(self, gameObject)
         self.color = (0,0,0,0)
-        
         
     def draw(self, screen):
         pos = self.gameObject.shape.position

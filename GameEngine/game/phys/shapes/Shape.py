@@ -25,6 +25,7 @@ class Shape(yaml.YAMLObject):
     =========AABB useful variables
     '''
     
+    #aabb stands for axis align bounding box
     def calAABB(self):
         return (self.Left(), self.Top(), self.Right(), self.Bottom())
     
@@ -38,8 +39,6 @@ class Shape(yaml.YAMLObject):
     
     def Bottom(self):
         return self.aabb[3] + self.position.y
-    
-    
     
     def Width(self):
         return self.Right() - self.Left()
@@ -57,11 +56,9 @@ class Shape(yaml.YAMLObject):
         y = self.Top()
         return Vector2.Vector2(x,y)
         
-    
     def Radius(self):
         w = self.Width()
         h = self.Height()
-        
         return math.sqrt(w * w + h * h)
     
     def draw(self, screen):

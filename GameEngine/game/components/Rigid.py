@@ -7,9 +7,10 @@ import game.components.Component as Component
 import game.util.Vector2 as Vector2
 
 
-# riged component require the gameObject to have a collider
-class Riged(Component.Component):
-    yaml_tag = u'!Riged'
+#A rigid gives control of an object's position through physics simulation.
+#Must have a collider
+class Rigid(Component.Component):
+    yaml_tag = u'!Rigid'
     def __getstate__(self):
         data =  Component.Component.__getstate__(self)
         data['mass'] = self.mass
@@ -18,10 +19,9 @@ class Riged(Component.Component):
         data['kinematic'] = self.kinematic
         return data
         
-        
     def __init__(self, gameObject):
         Component.Component.__init__(self, gameObject)
-        gameObject.riged = self
+        gameObject.rigid = self
         self.mass = 1.0
         self.velocity = Vector2.Vector2()
         self.applyGravity = True

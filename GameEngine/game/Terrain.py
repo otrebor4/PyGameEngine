@@ -7,14 +7,11 @@ import pygame
 import Resources
 import game.components.Collider as Collider
 import base.GameObject as GameObject
-#import game.phys.physutil as util
 import game.util.Vector2 as Vector2
 import util.graph as graph
 import game.lib.yaml as yaml
-#import scripts.CreateMap as CreateMap
 import game.components.LightSource as LightSource
 import game.util.NavMesh as NavMesh
-
 
 class TyleInfo:
     def __init__(self, pos, area=None, data = {'image':None,'name':''}):
@@ -23,11 +20,9 @@ class TyleInfo:
         self.data = data
         self.image = data['image']
         
-        
     def rect(self):
         (w, h) = (self.area[2], self.area[3]) if self.area != None else (64, 64)
         return (self.pos[0], self.pos[1], w, h)
-    
     
 class Terrain(yaml.YAMLObject):
     yaml_tag = u'!Terrain'
@@ -48,15 +43,13 @@ class Terrain(yaml.YAMLObject):
         self.original = self.mask.copy()
         self.haveLight = False
         self.navMesh = NavMesh.NavMesh()
-        #self.mask = self.mask.convert_alpha()
         
-    def GenerateLayer(self, tyles):
+    def generateLayer(self, tyles):
         width = self.size[0]
         height = self.size[1]
         layer = pygame.Surface([width, height], pygame.SRCALPHA, 32)
         layer = layer.convert_alpha()  # create layer of the size of the screen
-        
-        # layer.fill( (0,0,0,0))#clear layer
+
         for tyle in tyles:
             layer.blit(tyle.image, tyle.pos, tyle.area)
         return layer.convert_alpha()
@@ -66,7 +59,7 @@ class Terrain(yaml.YAMLObject):
         line = line.strip()
         tokens = line.split(',')
         if '.png' in tokens[0]:
-            data['image'] = self.resources.LoadImage(tokens[0])
+            data['image'] = self.resources.loadImage(tokens[0])
         for i in range(1,len(tokens)):
             token = tokens[i]
             if ':' in token:
@@ -81,7 +74,7 @@ class Terrain(yaml.YAMLObject):
     '''
     load layer from file, if haveCollision will return a list of collider objects
     '''
-    def MakeTerrain(self, map_file): 
+    def makeTerrain(self, map_file): 
         setAttr = False
         size = 64
         tyles = None
@@ -125,24 +118,22 @@ class Terrain(yaml.YAMLObject):
                             if c == 'M':
                                 nav.append(TyleInfo( (x,y), (0,0,size,size) ))
                         elif data.has_key(c):
-                            tyles.append(TyleInfo((x, y), (0, 0, size, size), data[c] ))
-                        
-                            
+                            tyles.append(TyleInfo((x, y), (0, 0, size, size), data[c] ))   
                         x = x + size
                     y = y + size
             if tyles:#check if there left over tyles
-                self.layers.append(self.GenerateLayer(tyles))
+                self.layers.append(self.generateLayer(tyles))
                 if setAttr:
-                    self.LoadAttributes(tyles,data)
+                    self.loadAttributes(tyles,data)
             if mesh and nav:
-                self.LoadNav(nav)
+                self.loadNav(nav)
                     
         return data
     
     '''
     Create colliders to tyles
     '''
-    def LoadNav(self,nav):
+    def loadNav(self,nav):
         #print "nav"
         navMesh = NavMesh.NavMesh()
         for tyle in nav:
@@ -159,7 +150,7 @@ class Terrain(yaml.YAMLObject):
         #self.navMesh.print_graph()
         #pygame.time.wait(1000)
     
-    def LoadAttributes(self,tyles,data):
+    def loadAttributes(self,tyles,data):
         #print "attr"
         graphs = {}
         for tyle in tyles:
@@ -196,17 +187,6 @@ class Terrain(yaml.YAMLObject):
                         light.intensity = int(info['intensity'])
                     if 'radius' in info.keys():
                         light.radius = int(info['radius'])
-                        
-                #if 'sink' in info.keys():
-                #    sink = block.addComponent(CreateMap.Sink)
-                #    if 'damage' in info.keys():
-                #        sink.damage = float(info['damage'])
-                #elif 'damage' in info.keys():
-                #    damage = block.addComponent(CreateMap.Damage)
-                #    damage.damage = float(info['damage'])    
-                #elif 'goal' in info.keys():
-                #    block.addComponent(CreateMap.Goal)
-                    
                     
     def toVector2(self, poly):
         _list = []
@@ -227,7 +207,6 @@ class Terrain(yaml.YAMLObject):
         temp.blit(orig,(0,0), special_flags = pygame.BLEND_RGB_SUB)
         return temp.convert_alpha()
         
-    
     def drawMask(self,screen):
         if not self.haveLight:
             self.mask.fill((0,0,0,225))
@@ -235,11 +214,11 @@ class Terrain(yaml.YAMLObject):
         self.mask = self.original.copy()
         self.haveLight = False
     
-    def AddLight(self,ligthMask, pos):
+    def addLight(self,ligthMask, pos):
         self.mask.blit(ligthMask,pos, special_flags = pygame.BLEND_RGBA_MULT)
         self.haveLight = True
     
-    def GetPath(self, start, goal):
+    def getPath(self, start, goal):
         if self.navMesh.data:
             return self.navMesh.GetPath(Vector2.Vector2(*start), Vector2.Vector2(*goal))
         return None

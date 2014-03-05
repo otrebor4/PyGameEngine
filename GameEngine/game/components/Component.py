@@ -5,6 +5,7 @@ Created on Jan 28, 2014
 '''
 import game.lib.yaml as yaml
 
+#Base class for a component
 class Component(yaml.YAMLObject):
     yaml_tag = u'!Component'
     def __getstate__(self):

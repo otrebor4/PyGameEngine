@@ -3,7 +3,7 @@ Created on Jan 29, 2014
 
 @author: otrebor
 '''
-import physutil
+from game.phys import PhysUtility
 import Events
 
 class PhysEng:
@@ -47,7 +47,7 @@ class PhysEng:
         dis = 1
         if obj1.static and obj2.static:
             return
-        info = physutil.testCollision(obj1, obj2)
+        info = PhysUtility.testCollision(obj1, obj2)
         if info != None: 
             if obj1.isTrigger or obj2.isTrigger:
                 if obj1.isTrigger and obj2.isTrigger:
@@ -65,7 +65,7 @@ class PhysEng:
                         move = info.direction.scale((info.distance + dis) / 2)
                         info.shape1.position = info.shape1.position.add(move)
                         info.shape2.position = info.shape2.position.add(move.scale(-1))
-                physutil.HandleCollision(obj1, obj2, info)
+                PhysUtility.HandleCollision(obj1, obj2, info)
                 self.callOnCollision(obj1, obj2, info)
     
     '''

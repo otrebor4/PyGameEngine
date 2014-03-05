@@ -9,14 +9,12 @@ import game.phys.shapes.Circle
 import game.phys.shapes.Polygon
 import game.util.Vector2 as Vector2
 
-
 class CollisionInfo:
     def __init__(self):
         self.shape1 = None
         self.shape2 = None
         self.distance = 0
-        self.direction = Vector2.Vector2()  # normal vector
-        
+        self.direction = Vector2.Vector2()  # normal vector        
 
 # fast aabb overlap check
 
@@ -248,7 +246,6 @@ def div(x, y):
     if y > INF:
         return 0
     return x / y
-
 
 def PolygonInsidePolygon( poly1, poly2 ):
     #check if poly1 is inside poly2

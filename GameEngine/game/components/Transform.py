@@ -5,6 +5,7 @@ Created on Feb 27, 2014
 '''
 import game.util.Vector2 as Vector2
 
+#work in progress
 class Transform:
     
     def __init__(self):
@@ -18,8 +19,7 @@ class Transform:
     def _removeChild(self,value):
         if value in self._childs:
             self._childs.remove(value)
-            
-            
+                   
     @property
     def parent(self):
         return self._parent

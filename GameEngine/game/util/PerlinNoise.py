@@ -6,7 +6,7 @@ Created on Feb 23, 2014
 
 import pygame
 import sys
-import perlin
+from game.util import Perli
 import random
 import math
 
@@ -41,7 +41,7 @@ def makenoise( width,height, x, y, z):
         for j in range(0,height):
             cx = i + x
             cy = j + y
-            n = perlin.SimplexNoise()
+            n = Perli.SimplexNoise()
             f = n.noise2(cx,cy)*2
             #f += n.noise2(cx+z,cy)*0.25
             #f += n.noise2(cx,cy+z)*0.25
@@ -131,7 +131,7 @@ class Noise2D:
     def __init__(self,freq,amp, x, y,seed = None):
         #rand = random.Random()
         #rand.seed( seed )
-        self.noise = perlin.SimplexNoise( int(math.ceil(2/amp)), seed= seed)# = (x*7351+y*3463)*7919)
+        self.noise = Perli.SimplexNoise( int(math.ceil(2/amp)), seed= seed)# = (x*7351+y*3463)*7919)
         self.frequency = freq
         self.amplitude = amp
         self.noiseValues = []
@@ -141,7 +141,7 @@ class Noise2D:
                 self.noiseValues[i].append( (self.noise.noise2(i+x, j+y)))
                 
     def getInterpolatedPointX(self,_xa, _xb, _ya, _yb, Px, Py):
-        noise = perlin.SimplexNoise()
+        noise = Perli.SimplexNoise()
                 
         noise.noise2(_xa, _ya)    
         return 0
