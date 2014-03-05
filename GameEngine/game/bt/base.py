@@ -145,9 +145,3 @@ class SwitchSelector:
         
         
         
-        
-        
-        
-        
-        
-        

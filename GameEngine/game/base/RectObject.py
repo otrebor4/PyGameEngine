@@ -9,6 +9,7 @@ import GameObject
 import game.components.Collider as Collider
 import game.components.Render as Render
 
+#creates game object of rectangle type
 class RectObject(GameObject.GameObject):
     yaml_tag = u'!RectObject'
     def __init__(self, world, x, y, w, h, color=None):
@@ -17,7 +18,7 @@ class RectObject(GameObject.GameObject):
         Collider.RectCollider(self, x, y, w, h)
         render = self.addComponent(RectRender)
         render.color = color
-                
+   
 class RectRender(Render.Render):
     yaml_tag = u'!RectRender'
     def __getstate__(self):

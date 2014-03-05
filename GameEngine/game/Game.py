@@ -7,9 +7,8 @@ import sys
 
 import pygame
 import game.Debug as Debug
-import pygame.locals as locals
 import util.Vector2 as Vector2
-import world
+import World
 import Resources
 import random
 
@@ -51,8 +50,8 @@ class Game:
         pygame.display.set_caption(self.GAMENAME)
         #pygame.display.toggle_fullscreen()
         
-        if not hasattr(self, 'world'):
-            self.world = world.World(self, self.RESOLUTION, Vector2.Vector2(0, 0))
+        if not hasattr(self, 'World'):
+            self.world = World.World(self, self.RESOLUTION, Vector2.Vector2(0, 0))
             
         self.fps = 0
         self.fps_time = 0
@@ -78,16 +77,15 @@ class Game:
     def update(self, delta):
         pygame.event.pump()
         for evt in pygame.event.get():
-            if evt.type == locals.QUIT:
+            if evt.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        if pygame.key.get_pressed()[locals.K_ESCAPE]:
+        if pygame.key.get_pressed()[pygame.K_ESCAPE]:
             pygame.quit()
             sys.exit()
-        if pygame.key.get_pressed()[locals.K_F4]:
+        if pygame.key.get_pressed()[pygame.K_F4]:
             self.ToggleFullScreen()
         self.world.update(delta)
-        
         return
     
     def run(self):
@@ -103,10 +101,9 @@ class Game:
             self.delta = deltaf
             self.update(deltaf)
             self.draw()
-    def Delta(self):
-        return self.delta
             
-    def Load(self,data):
+    def load(self,data):
         pass
-    def Reset(self):
+    
+    def reset(self):
         pass

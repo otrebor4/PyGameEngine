@@ -12,8 +12,9 @@ import game.phys.shapes.Rectangle as Rectangle
 import game.phys.shapes.Circle as Circle
 import game.phys.shapes.Polygon as Polygon
 
-# collider depends on shape to determine its position,size,dimensions
-#
+#Collider components define the shape of an object for the purposes of physical collisions
+#Collider depends on shape to determine its position,size,dimensions
+
 class Collider(Component.Component):
     taml_tag = u'Collider'
     def __getstate__(self):
@@ -22,15 +23,12 @@ class Collider(Component.Component):
         data['isTrigger'] = self.isTrigger
         return data
     
-    
-    
     def __init__(self, gameObject):
         Component.Component.__init__(self, gameObject)
         self.gameObject.collider = self
         self.gameObject.shape = None
         self.static = False
-        self.isTrigger =False
-        
+        self.isTrigger =False  
         
     def draw(self, screen):
         if self.gameObject and self.gameObject.shape:

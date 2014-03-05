@@ -91,14 +91,16 @@ class GameObject(yaml.YAMLObject):
             except:
                 print "Unexpected error:", sys.exc_info()[0]
                 raise
-    def Destroy(self):
+
+    def destroy(self):
         if self.world:
-            self.world.Delete(self)
-        
-        
+            self.world.delete(self)
+'''
+Testing Purposes...          
 if __name__ == '__main__':
     obj = GameObject(None)
     s = yaml.dump(obj)
     obj2 = yaml.load(s)
     print yaml.dump(obj2)
+'''
     

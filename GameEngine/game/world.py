@@ -7,7 +7,7 @@ import game.components.Sprite as Sprite
 import game.base.CircleObject as CircleObject
 import game.base.RectObject as RectObject
 import phys.PhysEng as PhysEng
-import components.Riged as Riged
+import game.components.Rigid as Rigid
 import util.Vector2 as Vector2
 import Terrain
 import game.base.GameObject as GameObject
@@ -15,9 +15,8 @@ import game.components.Collider as Collider
 import game.phys.shapes.Polygon as Polygon
 import game.lib.yaml as yaml
 
+#world is the area for all objects
 class World:
-    
-    
     
     def __init__(self, main, size, gravity=Vector2.Vector2()):
         size = (main.screen.get_width(), main.screen.get_height())
@@ -37,20 +36,23 @@ class World:
     '''
     Terrain loading 
     '''
-      
+    
+    #save terrain to text file  
     def saveTerrain(self,fileName):
         with open(fileName, 'w') as outfile:
             yaml.dump(self.terrain,outfile)
-        #yaml.sa
-          
-    def LoadTerrain(self,map_file,objs):
+    
+    #loads terrain from text file
+    def loadTerrain(self,map_file,objs):
         self.map_file = map_file
         self.objs = objs
         self.load = True
     
+    #calls reset, cleans up world
     def resetWorld(self):
         self.reset = True
     
+    #load entire world with all maps and objects
     def loadWorld(self, objs, files):
         self.load = True
         self.objs = objs
@@ -61,12 +63,11 @@ class World:
     '''
     def createObject(self):
         obj = GameObject.GameObject(self)
-        #self.AddObject(obj)
         return obj
     
     def createPolygon(self, points, static=True):
         obj = GameObject.GameObject(self)
-        ((x, y), vectors) = Polygon.getPoligonFromPoints(points)
+        ((x, y), vectors) = Polygon.getPolygonFromPoints(points)
         obj.collider = Collider.PolygonCollider(obj, x, y, vectors)
         self.phyEng.add(obj.collider)
         obj.collider.static = static
@@ -84,29 +85,27 @@ class World:
     def createCircle(self, x, y, r, color=(0, 0, 0), riged=True):
         cir = CircleObject.CircleObject(self, x, y, r, color)
         if riged:
-            cir.addComponent(Riged.Riged)
+            cir.addComponent(Rigid.Rigid)
         self.phyEng.add(cir.collider)
         self.objects.append(cir)
-        
         return cir
     
     def createRect(self, x, y, w, h, color=(0, 0, 0), riged=True):
         r = RectObject.RectObject(self, x, y, w, h, color)
         if riged:
-            r.addComponent(Riged.Riged)
-        
-        self.AddObject(r)
+            r.addComponent(Rigid.Rigid)
+        self.addObject(r)
         return r
     
     def createSprite(self,x,y,w,h, sprite_data,animations=False,riged = True):
         r = RectObject.RectObject(self, x, y, w, h)
         if riged:
-            r.addComponent(Riged.Riged)
+            r.addComponent(Rigid.Rigid)
             if animations:
-                Sprite.AddAnimator(r, sprite_data, self.main.resources)
+                Sprite.addAnimator(r, sprite_data, self.main.resources)
             else:
-                Sprite.AddSprite(r, sprite_data, self.main.resources)
-        self.AddObject(r)
+                Sprite.addSprite(r, sprite_data, self.main.resources)
+        self.addObject(r)
         return r
     
     def createRectGameObject(self,x,y,w,h,riged = True,trigger = False):
@@ -114,33 +113,37 @@ class World:
         col = Collider.RectCollider(obj, x, y, w, h)
         col.isTrigger = trigger
         if riged:
-            obj.addComponent(Riged.Riged)
-        self.AddObject(obj)
+            obj.addComponent(Rigid.Rigid)
+        self.addObject(obj)
         return obj
     def createCircGameObject(self,x,y,r,riged = True, trigger = False):
         obj = GameObject.GameObject(self)
         col = Collider.CircleCollider(obj,x,y,r)
         col.isTrigger = trigger
         if riged:
-            obj.addComponent(Riged.Riged)
-        self.AddObject(obj)
+            obj.addComponent(Rigid.Rigid)
+        self.addObject(obj)
         return obj
+
     '''
     GameObject retriver
     '''
-    def FindObject(self,name):
+    #retrieves object from world
+    def findObject(self,name):
         for obj in self.objects:
             if obj.name == name:
                 return obj
         return None
     
-    def GetFirstRange(self, (x,y), distance):
+    #returns first object within a circle with radius (distance), and center (x,y)
+    def getFirstRange(self, (x,y), distance):
         for obj in self.objects:
             if obj.shape and obj.shape.position.distance(Vector2.Vector2(x,y)) <= distance:
                 return obj
         return None
     
-    def GetOnRange(self, (x,y), distance, filters = {}):
+    #return all objects within a circle with radius (distance), and center (x,y)
+    def getOnRange(self, (x,y), distance, filters = {}):
         objs = []
         pos = Vector2.Vector2(x,y)
         for obj in self.objects:
@@ -159,7 +162,8 @@ class World:
     
     '''
     '''
-    def AddObject(self, gameObject):
+
+    def addObject(self, gameObject):
         if not gameObject:
             return
         if not (gameObject in self.objects):
@@ -167,7 +171,7 @@ class World:
         if gameObject.collider:
             self.phyEng.add(gameObject.collider)
     
-    def Delete(self, gameObject):
+    def delete(self, gameObject):
         self.phyEng.remove(gameObject.collider)
         self.toRemove.append(gameObject)
         
@@ -183,7 +187,6 @@ class World:
         for obj in self.toRemove:
             try:
                 self.objects.remove(obj)
-                #obj.sendMessage("OnDestroy")
             except:
                 pass
         self.toRemove = []
@@ -192,23 +195,23 @@ class World:
             self.reset = False
         if self.load:
             self.load = False
-            self.Load()
+            self.load()
             
-    def Reset(self):
+    def reset(self):
         self.phyEng.objects = []
         self.objects = []
         self.terrain.layers = []
-        self.main.Reset()
+        self.main.reset()
         
-    def Load(self):
-        self.Reset()
+    def load(self):
+        self.reset()
         data = {}
         if self.map_file:
-            data  = self.terrain.MakeTerrain(self.map_file)
+            data  = self.terrain.makeTerrain(self.map_file)
         for obj in self.objs:
-            self.AddObject(obj)
+            self.addObject(obj)
         data["objects"] = self.objects
-        self.main.Load(data)
+        self.main.load(data)
         
     def debDraw(self, screen):
         self.phyEng.draw(screen)

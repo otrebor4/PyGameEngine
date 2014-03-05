@@ -9,10 +9,12 @@ import game.util.Vector2 as Vector2
 import game.Resources as Resources
 import game.lib.yaml as yaml
 import game.Game
+import pygame
 
 '''
 Sprite component, hold and draw image sprite
 '''
+
 class Sprite(Render.Render):
     yaml_tag =u'!Sprite'
     def __getstate__(self):
@@ -27,7 +29,7 @@ class Sprite(Render.Render):
         self.__dict__.update(state)
         if game.Game.Game.Instance() and self.fileName:
             g = game.Game.Game.Instance()
-            self.image = g.resources.LoadImage(self.fileName)
+            self.image = g.resources.loadImage(self.fileName)
     
     def __init__(self, gameObject):
         Render.Render.__init__(self, gameObject)
@@ -48,8 +50,6 @@ class Sprite(Render.Render):
     
     def draw(self, screen):
         pos = self.gameObject.shape.StartCorner() if self.gameObject != None and self.gameObject.shape != None else Vector2.Vector2()
-        
-        
         area = self.sprite_data[self.current] if self.sprite_data.has_key(self.current) else None
         pos = pos.xy()
         pos = (pos[0]+self.offset[0], pos[1]+self.offset[1])
@@ -102,8 +102,7 @@ class SpriteAnim(Component.Component):
             animData = self.animations[self.current_animation]
             animData.update(delta * self.speed)
             self.sprite.changeSprite(animData.currentFrame())
-        
-  
+         
 class Animation(yaml.YAMLObject):
     yaml_tag =u'!Animation'
     
@@ -136,18 +135,16 @@ class Animation(yaml.YAMLObject):
             self.current_frame = (self.current_frame + 1) % flen
             self.timer = 0
 
-
-
-def AddSprite(gameObject,file_name, resources=Resources.Resources(""), offset = (0,0), img_name = None):
-    (fileName,image,spritedata,anim) = loadData(file_name,resources)
+#functions of sprite class
+def addSprite(gameObject,file_name, resources=Resources.Resources(""), offset = (0,0), img_name = None):
+    (fileName,image,spriteData,anim) = loadData(file_name,resources)
     sprite = gameObject.addComponent(Sprite)
     if not img_name:
-        img_name = spritedata.keys()[0]
-    sprite.setData(fileName,image,spritedata, img_name)
+        img_name = spriteData.keys()[0]
+    sprite.setData(fileName,image,spriteData, img_name)
     sprite.offset = offset
     
-    
-def AddAnimator(gameObject,file_name,resources=Resources.Resources(""),offset = (0,0),img_name=None):
+def addAnimator(gameObject,file_name,resources=Resources.Resources(""),offset = (0,0),img_name=None):
     (fileName,image,spritedata,anims) = loadData(file_name,resources)
     sprite = gameObject.addComponent(Sprite)
     if not img_name:
@@ -159,16 +156,14 @@ def AddAnimator(gameObject,file_name,resources=Resources.Resources(""),offset = 
     spriteAnim.setAnimations(anims)
     return spriteAnim
     
-    
 def makeAnimations(anims):
     animations = {}
     for k in anims.keys():
         animations[k] = Animation(k,1,anims[k])
     return animations
 
-
 def loadData(file_name, resources=Resources.Resources("")):
-    spritedata = {}
+    spriteData = {}
     anims = {}
     f = open(file_name)
     image_name = f.readline().rstrip('\n')  # first line is the image_directory
@@ -179,9 +174,9 @@ def loadData(file_name, resources=Resources.Resources("")):
             anims[name] = data
         else:
             (sname, (x, y, w, h)) = parseSpriteLine(line)
-            spritedata[sname] = (x, y, w, h)
-    image = resources.LoadImage(image_name)
-    return (image_name,image, spritedata, anims)
+            spriteData[sname] = (x, y, w, h)
+    image = resources.loadImage(image_name)
+    return (image_name,image, spriteData, anims)
 
 '''
 pares animation sprite data,
@@ -205,9 +200,10 @@ name:x,y,w,h
 def parseSpriteLine(line):
     (name, data) = line.split(":")
     (x, y, w, h) = data.split(",")
-    return (name, (int(x), int(y), int(w), int(h))) 
-        
+    return (name, (int(x), int(y), int(w), int(h)))      
 
+'''
+testing purposes...
 
 import pygame    
 if __name__ == '__main__':
@@ -223,7 +219,7 @@ if __name__ == '__main__':
     
     
     pass
-        
+     '''   
         
         
 

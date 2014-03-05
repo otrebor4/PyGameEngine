@@ -7,6 +7,7 @@ import pygame
 import Component
 import game.phys.shapes.Polygon as Polygon
 
+#general light class
 class Light(Component.Component):
     yaml_tag = u'!Light'
     def __getstate__(self):
@@ -26,8 +27,9 @@ class Light(Component.Component):
             pos = self.gameObject.shape.position.xy() if self.gameObject.shape else self.position
             pos = (pos[0]+self.offset[0], pos[1]+self.offset[1])
             terrain = self.gameObject.world.terrain
-            terrain.AddLight(self.light, pos)
-        
+            terrain.addLight(self.light, pos)
+ 
+#creates a cone light from an object       
 class FlashLight(Component.Component):
     
     def __init__(self,gameObject):
@@ -40,6 +42,7 @@ class FlashLight(Component.Component):
         self.catche = None
         self.catcheAngle = 0
         self.startHeight = 0
+        
     def setVals(self, width, height, angle, intensity,start=0, offset=(0,0)):
         self.intensity = intensity
         self.height = height
@@ -50,7 +53,7 @@ class FlashLight(Component.Component):
         
     def makePolygon(self):
         points = [ (0,0),(0,-self.startHeight/2) , (self.widht,-self.height/2), (self.widht, self.height/2),(0, self.startHeight/2) ]
-        ((x,y),pt) = Polygon.getPoligonFromPoints(points)
+        ((x,y),pt) = Polygon.getPolygonFromPoints(points)
         return Polygon.Polygon( x,y, pt)
     
     def update(self,delta):
@@ -58,11 +61,9 @@ class FlashLight(Component.Component):
             self.catche = self.makePolygon().rotate(self.angle)
             self.catcheAngle = self.angle
         polygon = self.catche
-        
-        
         offset = (0-polygon.Left(),0- polygon.Top())
         points = polygon.Points()
-        points = self.AddOffSet(points,offset)
+        points = self.addOffSet(points,offset)
         w=polygon.Width()
         h=polygon.Height()
         light = pygame.Surface( (w,h), pygame.SRCALPHA,32)
@@ -72,21 +73,15 @@ class FlashLight(Component.Component):
         pos = (pos[0]+self.offset[0]-offset[0], pos[1]+self.offset[1]-offset[1])
         
         pygame.draw.polygon(light, color, points )
-        self.gameObject.world.terrain.AddLight(light,pos)
+        self.gameObject.world.terrain.addLight(light,pos)
             
-    def AddOffSet(self, pts, offset):
+    def addOffSet(self, pts, offset):
         points = []
         for pt in pts:
             points.append( (pt[0]+offset[0], pt[1]+offset[1]))
         return points
-        #pos = self.position if self.position != None else (self.gameObject.shape.Center().xy() if self.gameObject.shape != None else (0,0))
-        #light = 
-        #light = pygame.Surface( ( 2*self.radius,2*self.radius),pygame.SRCALPHA, 32)
-        #light.fill((255,255,255,255))
-        #pygame.draw.polygon(light,(255,255,255,255-self.intensity), self.GetPoints(pos),  ) #circle(light, (255,255,255,255-self.intensity), (self.radius,self.radius),self.radius)
-        #pos = (pos[0]-self.radius, pos[1]-self.radius)
-        #self.gameObject.world.terrain.AddLight(light,pos)
-    
+ 
+#light for the entire area in play   
 class EnvironmentLight(Component.Component):
     yaml_tag = u'!EnvironmentLight'
     def __getstate__(self):
@@ -102,7 +97,7 @@ class EnvironmentLight(Component.Component):
     def update(self,delta):
         light = pygame.display.get_surface().convert_alpha()
         light.fill(self.color)
-        self.gameObject.world.terrain.AddLight(light,(0,0))
+        self.gameObject.world.terrain.addLight(light,(0,0))
         
 class SpotLight(Component.Component):
     yaml_tag = u'!SpotLight'
@@ -126,13 +121,12 @@ class SpotLight(Component.Component):
         self.offset = offset
         
     def update(self,delta):
-        pos = self.position if self.position != None else (self.gameObject.shape.Center().xy() if self.gameObject.shape != None else (0,0))
-                                                               
+        pos = self.position if self.position != None else (self.gameObject.shape.Center().xy() if self.gameObject.shape != None else (0,0))                                                    
         light = pygame.Surface( ( 2*self.radius,2*self.radius),pygame.SRCALPHA, 32)
         light.fill((255,255,255,255))
         pygame.draw.circle(light, (255,255,255,255-self.intensity), (self.radius,self.radius),self.radius)
         pos = (pos[0]-self.radius+self.offset[0], pos[1]-self.radius+self.offset[1])
-        self.gameObject.world.terrain.AddLight(light,pos)
+        self.gameObject.world.terrain.addLight(light,pos)
         
         
         
