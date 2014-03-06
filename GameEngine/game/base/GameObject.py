@@ -6,6 +6,7 @@ Created on Jan 27, 2014
 import inspect
 import sys
 import game.lib.yaml as yaml
+import game.components.Transform as Transform
 
 class Object():
     def __init__(self):
@@ -17,35 +18,36 @@ class GameObject(yaml.YAMLObject):
     def __getstate__(self):
         data = {}
         data['name'] = self.name 
-        data['shape'] = self.shape
+        #data['shape'] = self.shape
         data['collider'] = self.collider
         data['renders'] = self.renders
         data['GUIs'] = self.GUIs
         data['components'] = self.components
-        data['riged'] = self.riged
+        data['rigid'] = self.rigid
         data['type'] = self.type
+        data['transform'] = self.transform
         return data
     
     def __init__(self, world):
         self.name = "object"
         self.type = 'object'
         self.world = world
-        self.shape = None
         self.collider = None
         self.renders = []
         self.GUIs = []
         self.components = []
-        self.riged = None
+        self.rigid = None
         if world:
             self.main = world.main
         else:
             self.main = None
+        self.transform = Transform.Transform(self)
+    
     def addComponent(self, component):
         comp = None
         if component != None:
             if inspect.isclass(component):
                 comp = component(self)
-                # self.components.append(comp)
             else:
                 print "component %s is not a ClassType" % (component)
                 raise
@@ -95,6 +97,8 @@ class GameObject(yaml.YAMLObject):
     def destroy(self):
         if self.world:
             self.world.delete(self)
+
+
 '''
 Testing Purposes...          
 if __name__ == '__main__':

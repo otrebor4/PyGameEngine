@@ -3,7 +3,7 @@ Created on Jan 27, 2014
 
 @author: otrebor
 '''
-import game.components.Sprite as Sprite
+import game.components.Sprite
 import game.base.CircleObject as CircleObject
 import game.base.RectObject as RectObject
 import phys.PhysEng as PhysEng
@@ -102,9 +102,9 @@ class World:
         if riged:
             r.addComponent(Rigid.Rigid)
             if animations:
-                Sprite.addAnimator(r, sprite_data, self.main.resources)
+                game.components.Sprite.addAnimator(r, sprite_data, self.main.resources)
             else:
-                Sprite.addSprite(r, sprite_data, self.main.resources)
+                game.components.Sprite.addSprite(r, sprite_data, self.main.resources)
         self.addObject(r)
         return r
     

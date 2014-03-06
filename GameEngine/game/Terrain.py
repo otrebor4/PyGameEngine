@@ -33,7 +33,7 @@ class Terrain(yaml.YAMLObject):
         
         return data
     
-    def __init__(self, resources=Resources.Resources(), size=(512, 512), world=None, color = (255,255,255,255)):
+    def __init__(self, resources=Resources.Resources(), size=(512, 512), world=None, color = (0,0,0,0)):
         self.size = size
         self.layers = []
         self.resources = resources
@@ -134,7 +134,6 @@ class Terrain(yaml.YAMLObject):
     Create colliders to tyles
     '''
     def loadNav(self,nav):
-        #print "nav"
         navMesh = NavMesh.NavMesh()
         for tyle in nav:
             (x,y,w,h) = tyle.rect()
@@ -147,11 +146,9 @@ class Terrain(yaml.YAMLObject):
             navMesh.addEdge(p2,p3)
             navMesh.addEdge(p3,p0)
         self.navMesh = navMesh.makeNavMesh()
-        #self.navMesh.print_graph()
-        #pygame.time.wait(1000)
+
     
     def loadAttributes(self,tyles,data):
-        #print "attr"
         graphs = {}
         for tyle in tyles:
             name = tyle.data['name']
@@ -192,8 +189,6 @@ class Terrain(yaml.YAMLObject):
         _list = []
         for i in range(0, len(poly)):
             _list.append( Vector2.Vector2(poly[i][0], poly[i][1]))
-            
-        
         return _list
     
     def drawLayer(self, screen, args):
@@ -208,15 +203,11 @@ class Terrain(yaml.YAMLObject):
         return temp.convert_alpha()
         
     def drawMask(self,screen):
-        if not self.haveLight:
-            self.mask.fill((0,0,0,225))
         screen.blit(self.mask,(0,0))
         self.mask = self.original.copy()
-        self.haveLight = False
     
     def addLight(self,ligthMask, pos):
-        self.mask.blit(ligthMask,pos, special_flags = pygame.BLEND_RGBA_MULT)
-        self.haveLight = True
+        self.mask.blit(ligthMask,pos, special_flags = pygame.BLEND_RGBA_ADD)
     
     def getPath(self, start, goal):
         if self.navMesh.data:
