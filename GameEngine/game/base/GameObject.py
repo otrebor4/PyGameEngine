@@ -18,7 +18,6 @@ class GameObject(yaml.YAMLObject):
     def __getstate__(self):
         data = {}
         data['name'] = self.name 
-        #data['shape'] = self.shape
         data['collider'] = self.collider
         data['renders'] = self.renders
         data['GUIs'] = self.GUIs

@@ -203,7 +203,7 @@ class Terrain(yaml.YAMLObject):
         return temp.convert_alpha()
         
     def drawMask(self,screen):
-        screen.blit(self.mask,(0,0))
+        screen.blit(self.mask,(0,0), special_flags = pygame.BLEND_RGBA_MULT)
         self.mask = self.original.copy()
     
     def addLight(self,ligthMask, pos):

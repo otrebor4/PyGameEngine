@@ -26,19 +26,19 @@ class Collider(Component.Component):
     def __init__(self, gameObject):
         Component.Component.__init__(self, gameObject)
         self.gameObject.collider = self
-        self.gameObject.shape = None
-        self.static = False
-        self.isTrigger =False  
+        self.isStationary = False
+        self.isTrigger = False  
+        self.shape = None
         
     def draw(self, screen):
-        if self.gameObject and self.gameObject.shape:
-            self.gameObject.shape.draw(screen)
-    
+        if self.shape:
+            self.shape.draw(screen)
+
 class CircleCollider(Collider):
     yaml_tag = u'!CircleCollider'
     def __init__(self, gameObject, x=0, y=0, radius=0):
         Collider.__init__(self, gameObject)
-        self.gameObject.shape = Circle.Circle(x, y, radius)
+        self.shape = Circle.Circle(self.transform, (x, y), radius)
         
 class RectCollider(Collider):
     yaml_tag = u'!RectCollider'

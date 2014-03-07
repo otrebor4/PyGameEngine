@@ -18,15 +18,50 @@ class Polygon(Shape.Shape):
         data['corners'] = self.corners
         return data
         
-    def __init__(self, x, y, points):
-        # points are vectors from the reference point (x,y)
-        Shape.Shape.__init__(self, x, y)
+    def __init__(self,transform, (x,y) = (0,0), points = []):
+        Shape.Shape.__init__(self, transform)
+        self._offset = (x,y)
         self.corners = [ Vector2.Vector2(pt.x, pt.y) for pt in points ]
+        self.calAABB()
+        
+    def calAABB(self):
         self.aabb = (min([pt.x for pt in self.corners]),
                      min([pt.y for pt in self.corners]),
                      max([pt.x for pt in self.corners]),
                      max([pt.y for pt in self.corners]))
         
+    @property
+    def offset(self):
+        return self._offset
+    
+    @offset.setter
+    def offset(self,value):
+        self._offset = value
+        
+    @property
+    def center(self):
+        return self.transform.position.add(Vector2.Vector2(*self.offset))
+    
+    @property
+    def width(self):
+        return self.radius*2
+    
+    @property
+    def height(self):
+        return self.radius*2
+    
+    @property
+    def radius(self):
+        return self._radius
+    
+    @radius.setter
+    def radius(self,value):
+        self._radius = value
+        self.calAABB()
+    
+    
+    
+    '''  
     def rotate(self,angle):
         corners = []
         for point in self.corners:
@@ -61,7 +96,7 @@ class Polygon(Shape.Shape):
         points = self.getXYPoints()
         for i in range(-1,len(points)-1):
             pygame.draw.line(screen,(250,0,0,100), points[i],points[i+1] ) 
-            
+    '''
 def getPolygonFromPoints(pts):
     vectors = []
     if len(pts) == 0:

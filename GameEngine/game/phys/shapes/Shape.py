@@ -8,6 +8,8 @@ import math
 import game.util.Vector2 as Vector2
 import pygame
 import game.lib.yaml as yaml
+import game.components.Transform as Transform
+
 
 class Shape(yaml.YAMLObject):
     yaml_tag = u'!Shape'
@@ -17,63 +19,56 @@ class Shape(yaml.YAMLObject):
         data['aabb'] = self.aabb
         return data
     
-    def __init__(self, x, y):
-        self.position = Vector2.Vector2(x, y)
+    def __init__(self,transform):
+        self.transform = Transform.Transform(None)
+        self.transform =transform
         self.aabb = (0, 0, 0, 0)
     
     '''
     =========AABB useful variables
     '''
+    @property
+    def position(self):
+        return self.transform.position
     
     #aabb stands for axis align bounding box
     def calAABB(self):
-        return (self.Left(), self.Top(), self.Right(), self.Bottom())
+        raise NotImplementedError
     
-    def Left(self):
-        return self.aabb[0] + self.position.x
-    def Top(self):
-        return self.aabb[1] + self.position.y
+    @property
+    def left(self):
+        raise NotImplementedError
     
-    def Right(self):
-        return self.aabb[2] + self.position.x
-    
-    def Bottom(self):
-        return self.aabb[3] + self.position.y
-    
-    def Width(self):
-        return self.Right() - self.Left()
-    
-    def Height(self):
-        return self.Bottom() - self.Top()
-    
-    def Center(self):
-        x = self.Left() + self.Width() / 2
-        y = self.Top() + self.Height() / 2
-        return Vector2.Vector2(x, y)
-    
-    def StartCorner(self):
-        x = self.Left()
-        y = self.Top()
-        return Vector2.Vector2(x,y)
-        
-    def Radius(self):
-        w = self.Width()
-        h = self.Height()
-        return math.sqrt(w * w + h * h)
+    @property
+    def top(self):
+        raise NotImplementedError
+    @property
+    def right(self):
+        raise NotImplementedError
+    @property
+    def bottom(self):
+        raise NotImplementedError
+    @property
+    def width(self):
+        raise NotImplementedError
+    @property
+    def height(self):
+        raise NotImplementedError
+    @property
+    def center(self):
+        raise NotImplementedError
+    @property
+    def startCorner(self):
+        raise NotImplementedError
+    @property    
+    def radius(self):
+        raise NotImplementedError
     
     def draw(self, screen):
-        s = pygame.Surface([self.Width(), self.Height()], pygame.SRCALPHA, 32)
-        s.fill((250, 0, 0, 100))
-        
-        screen.blit(s, (self.Left(), self.Top()))
-        pass
-    
-    def Points(self):
-        points = [(self.Left(),self.Top()), 
-                  (self.Right(),self.Top()),
-                  (self.Right(),self.Bottom()),
-                  (self.Left(),self.Bottom())]
-        return points
+        raise NotImplementedError
+    @property
+    def points(self):
+        raise NotImplementedError
         
             
             
