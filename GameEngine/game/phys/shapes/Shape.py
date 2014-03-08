@@ -3,10 +3,6 @@ Created on Jan 28, 2014
 
 @author: otrebor
 '''
-import math
-
-import game.util.Vector2 as Vector2
-import pygame
 import game.lib.yaml as yaml
 import game.components.Transform as Transform
 

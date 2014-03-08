@@ -4,20 +4,20 @@ Created on Feb 11, 2014
 @author: Otrebor45
 '''
 import pygame
-import Component
+from game.components import Component
 import game.phys.shapes.Polygon as Polygon
 
 #general light class
-class Light(Component.Component):
+class Light(Component.ComponentBase):
     yaml_tag = u'!Light'
     def __getstate__(self):
-        data = Component.Component.__getstate__(self)
+        data = Component.ComponentBase.__getstate__(self)
         data['light'] = self.light
         data['position'] = self.position
         return data
     
     def __init__(self, gameObject):
-        Component.Component.__init__(self, gameObject)
+        Component.ComponentBase.__init__(self, gameObject)
         self.light = None
         self.position = (0,0)
         self.offset = (0,0)
@@ -30,10 +30,10 @@ class Light(Component.Component):
             terrain.addLight(self.light, pos)
  
 #creates a cone light from an object       
-class FlashLight(Component.Component):
+class FlashLight(Component.ComponentBase):
     
     def __init__(self,gameObject):
-        Component.Component.__init__(self, gameObject)
+        Component.ComponentBase.__init__(self, gameObject)
         self.color = (255,255,255,255)
         self.widht = 10
         self.height = 10
@@ -80,15 +80,15 @@ class FlashLight(Component.Component):
         return points
  
 #light for the entire area in play   
-class EnvironmentLight(Component.Component):
+class EnvironmentLight(Component.ComponentBase):
     yaml_tag = u'!EnvironmentLight'
     def __getstate__(self):
-        data = Component.Component.__getstate__(self)
+        data = Component.ComponentBase.__getstate__(self)
         data['color'] = self.color
         return data
     
     def __init__(self, gameObject):
-        Component.Component.__init__(self, gameObject)
+        Component.ComponentBase.__init__(self, gameObject)
         self.color = (10,10,10,255)
         
         
@@ -97,17 +97,17 @@ class EnvironmentLight(Component.Component):
         light.fill(self.color)
         self.gameObject.world.terrain.addLight(light,(0,0))
         
-class SpotLight(Component.Component):
+class SpotLight(Component.ComponentBase):
     yaml_tag = u'!SpotLight'
     def __getstate__(self):
-        data =  Component.Component.__getstate__(self)
+        data =  Component.ComponentBase.__getstate__(self)
         data['position'] = self.position
         data['radius'] = self.radius
         data['color'] = self.color
         return data
         
     def __init__(self, gameObject):
-        Component.Component.__init__(self, gameObject)
+        Component.ComponentBase.__init__(self, gameObject)
         self.position = None
         self.radius = 1
         self.color = (255,255,255,255)

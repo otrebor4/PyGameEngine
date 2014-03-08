@@ -67,10 +67,10 @@ class Sprite(Render.Render):
 '''
 Component that animate sprite on a gameObject
 '''
-class SpriteAnim(Component.Component):
+class SpriteAnim(Component.ComponentBase):
     yaml_tag = u'!SpriteAnim'
     def __getstate__(self):
-        data = Component.Component.__getstate__(self)
+        data = Component.ComponentBase.__getstate__(self)
         data['sprite'] = self.sprite
         data['animations'] = self.animations
         data['current_animation'] = self.current_animation
@@ -78,7 +78,7 @@ class SpriteAnim(Component.Component):
         return data
         
     def __init__(self, gameObject):
-        Component.Component.__init__(self, gameObject)
+        Component.ComponentBase.__init__(self, gameObject)
         self.sprite = self.gameObject.getComponent("Sprite")
         self.animations = {}  # animation data, animation_name(string) :Value Animation()
         self.current_animation = "anim1"  # animation name to play

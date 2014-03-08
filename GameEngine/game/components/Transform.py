@@ -12,6 +12,7 @@ class Transform(Component.Component):
         self._local_position = Vector2.Zero
         self._parent = None
         self._childs = []
+        self._angle = 0
         
     def _addChild(self,value):
         if value not in self._childs:
@@ -24,6 +25,7 @@ class Transform(Component.Component):
     @property
     def parent(self):
         return self._parent
+    
     @parent.setter
     def parent(self,value):
         pos = self.position #get current position
@@ -37,6 +39,7 @@ class Transform(Component.Component):
     @property
     def localPosition(self):
         return self._local_position
+    
     @localPosition.setter
     def localPosition(self,value):
         self._local_position = value
@@ -47,6 +50,7 @@ class Transform(Component.Component):
             return self._parent.position.add(self.localPosition)
         else:
             return self.localPosition
+        
     @position.setter
     def position(self,value):
         if self._parent:
@@ -54,6 +58,18 @@ class Transform(Component.Component):
             self.localPosition = offset
         else:
             self.localPosition = value
+            
+    @property
+    def angle(self):
+        return self._angle
+    
+    @angle.setter
+    def angle(self,value):
+        self._angle = value
+        if value < 0:
+            self.angle = value + 360
+        if value >= 360:
+            self.angle = value - 360
     
     '''
     @property

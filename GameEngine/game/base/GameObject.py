@@ -7,6 +7,8 @@ import inspect
 import sys
 import game.lib.yaml as yaml
 import game.components.Transform as Transform
+import game.components.Collider as Collider
+import game.components.Rigid as Rigid
 
 class Object():
     def __init__(self):
@@ -31,10 +33,12 @@ class GameObject(yaml.YAMLObject):
         self.name = "object"
         self.type = 'object'
         self.world = world
+        self.collider = Collider.Collider(None)
         self.collider = None
         self.renders = []
         self.GUIs = []
         self.components = []
+        self.rigid = Rigid.Rigid(None)
         self.rigid = None
         if world:
             self.main = world.main

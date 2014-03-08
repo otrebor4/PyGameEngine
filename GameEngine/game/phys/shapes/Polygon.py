@@ -21,14 +21,26 @@ class Polygon(Shape.Shape):
     def __init__(self,transform, (x,y) = (0,0), points = []):
         Shape.Shape.__init__(self, transform)
         self._offset = (x,y)
-        self.corners = [ Vector2.Vector2(pt.x, pt.y) for pt in points ]
+        self._corners = [ Vector2.Vector2(pt.x, pt.y) for pt in points ]
+        self._cache = self._corners
+        self._angle = -999
         self.calAABB()
         
     def calAABB(self):
-        self.aabb = (min([pt.x for pt in self.corners]),
-                     min([pt.y for pt in self.corners]),
-                     max([pt.x for pt in self.corners]),
-                     max([pt.y for pt in self.corners]))
+        corners = self.corners
+        self.aabb = (min([pt.x for pt in corners]),
+                     min([pt.y for pt in corners]),
+                     max([pt.x for pt in corners]),
+                     max([pt.y for pt in corners]))
+        
+    @property
+    def corners(self):
+        if self._angle != self.transform.angle:
+            self._angle = self.transform.angle
+            self._cache = []
+            for point in self._corners:
+                self._cache.append(point.rotate(self._angle))
+        return self._cache
         
     @property
     def offset(self):
@@ -43,22 +55,63 @@ class Polygon(Shape.Shape):
         return self.transform.position.add(Vector2.Vector2(*self.offset))
     
     @property
+    def left(self):
+        return self.aabb[0] + self.position.x
+    
+    @property
+    def top(self):
+        return self.aabb[1] + self.position.y
+    
+    @property
+    def right(self):
+        return self.aabb[2] + self.position.x
+    
+    @property
+    def bottom(self):
+        return self.aabb[3] + self.position.y
+    
+    @property
     def width(self):
-        return self.radius*2
+        return self.right - self.left
     
     @property
     def height(self):
-        return self.radius*2
+        return self.bottom - self.top
     
     @property
-    def radius(self):
-        return self._radius
+    def startCorner(self):
+        return (self.left, self.top)
     
-    @radius.setter
-    def radius(self,value):
-        self._radius = value
-        self.calAABB()
+    @property    
+    def endCorner(self):
+        return (self.right, self.bottom)
     
+    def draw(self, screen):
+        points = self.getXYPoints()
+        for i in range(-1,len(points)-1):
+            pygame.draw.line(screen,(250,0,0,100), points[i],points[i+1] ) 
+    
+    def getPoints(self):
+        corners = self.corners
+        points = []
+        for i in range(0, len(corners)):
+            points.append(corners[i].add(self.position))
+        return points
+    
+    def getEdges(self):
+        corners = self.corners
+        edges = []
+        for i in range(0, len(corners)):
+            edges.append((corners[i - 1].add(self.position), corners[i].add(self.position)))
+        return edges
+    
+    def getXYPoints(self):
+        corners = self.corners
+        points = []
+        for i in range(0, len(corners)):
+            p = corners[i].add(self.position)
+            points.append(p.xy())
+        return points
     
     
     '''  

@@ -9,10 +9,10 @@ import game.util.Vector2 as Vector2
 
 #A rigid gives control of an object's position through physics simulation.
 #Must have a collider
-class Rigid(Component.Component):
+class Rigid(Component.ComponentBase):
     yaml_tag = u'!Rigid'
     def __getstate__(self):
-        data =  Component.Component.__getstate__(self)
+        data =  Component.ComponentBase.__getstate__(self)
         data['mass'] = self.mass
         data['velocity'] = self.velocity
         data['applyGravity'] = self.applyGravity
@@ -20,7 +20,7 @@ class Rigid(Component.Component):
         return data
         
     def __init__(self, gameObject):
-        Component.Component.__init__(self, gameObject)
+        Component.ComponentBase.__init__(self, gameObject)
         gameObject.rigid = self
         self.mass = 1.0
         self.velocity = Vector2.Vector2()
@@ -29,7 +29,7 @@ class Rigid(Component.Component):
         
     # apply movement to object
     def update(self, delta):
-        if self.gameObject.collider.static:
+        if self.gameObject.collider.isStationary:
             self.velocity = Vector2.Vector2()  # static object can't be moved by given speed must manually change position
         self.gameObject.shape.position = self.gameObject.shape.position.add(self.velocity.scale(delta))
         

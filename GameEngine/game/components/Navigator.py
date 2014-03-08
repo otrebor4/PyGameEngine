@@ -3,12 +3,12 @@ Created on Feb 18, 2014
 
 @author: otrebor
 '''
-import Component
+from game.components import Component
 
-class Navigator(Component.Component):
+class Navigator(Component.ComponentBase):
     
     def __init__(self, gameObject):
-        Component.Component.__init__(self, gameObject)
+        Component.ComponentBase.__init__(self, gameObject)
         self.path = None
         
     def setPath(self,dest):

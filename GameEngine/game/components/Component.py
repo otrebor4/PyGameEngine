@@ -4,6 +4,7 @@ Created on Jan 28, 2014
 @author: otrebor
 '''
 import game.lib.yaml as yaml
+import game.base.GameObject as GameObject
 
 #Base class for a component
 class Component(yaml.YAMLObject):
@@ -14,6 +15,7 @@ class Component(yaml.YAMLObject):
         return data
     
     def __init__(self, gameObject):
+        self.gameObject = GameObject.GameObject()
         self.gameObject = gameObject
         if self.gameObject != None:
             self.gameObject.components.append(self)

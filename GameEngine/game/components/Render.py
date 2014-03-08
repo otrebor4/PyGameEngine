@@ -3,13 +3,13 @@ Created on Feb 5, 2014
 
 @author: Otrebor45
 '''
-import Component
+from game.components import Component
 
 #A render makes object appear on the screen
-class Render(Component.Component):
+class Render(Component.ComponentBase):
     yaml_tag = u'!Render'
     def __init__(self, gameObject):
-        Component.Component.__init__(self, gameObject)
+        Component.ComponentBase.__init__(self, gameObject)
         if gameObject:
             gameObject.renders.append(self)
     

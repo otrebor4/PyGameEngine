@@ -8,16 +8,16 @@ import game.util.Vector2 as Vector2
 import pygame
 
 
-class Controller(Component.Component):
+class Controller(Component.ComponentBase):
     yaml_tag = u'!Controller'
     def __getstate__(self):
-        data = Component.Component.__getstate__(self)
+        data = Component.ComponentBase.__getstate__(self)
         data['walkSpeed'] = self.walkSpeed
         data['runSpeed'] = self.runSpeed
         return data
     
     def __init__(self, gameObject):
-        Component.Component.__init__(self, gameObject)
+        Component.ComponentBase.__init__(self, gameObject)
         self.coldown = 0
         if self.gameObject.rigid:
             self.gameObject.rigid.kinematic = True
@@ -46,9 +46,9 @@ class Controller(Component.Component):
                 vel = vel if vel.magnitude() > .01 else Vector2.Vector2()
                 self.gameObject.rigid.velocity = vel
 
-class FlashLightController(Component.Component):
+class FlashLightController(Component.ComponentBase):
     def __init__(self, gameObject):
-        Component.Component.__init__(self, gameObject)
+        Component.ComponentBase.__init__(self, gameObject)
         pass
     def update(self,delta):
         rigid = self.gameObject.rigid

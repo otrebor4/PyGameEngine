@@ -15,16 +15,16 @@ import game.phys.shapes.Polygon as Polygon
 #Collider components define the shape of an object for the purposes of physical collisions
 #Collider depends on shape to determine its position,size,dimensions
 
-class Collider(Component.Component):
+class Collider(Component.ComponentBase):
     taml_tag = u'Collider'
     def __getstate__(self):
-        data = Component.Component.__getstate__(self)
+        data = Component.ComponentBase.__getstate__(self)
         data['static'] = self.static
         data['isTrigger'] = self.isTrigger
         return data
     
     def __init__(self, gameObject):
-        Component.Component.__init__(self, gameObject)
+        Component.ComponentBase.__init__(self, gameObject)
         self.gameObject.collider = self
         self.isStationary = False
         self.isTrigger = False  
