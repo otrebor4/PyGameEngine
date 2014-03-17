@@ -5,22 +5,22 @@ Created on Jan 28, 2014
 '''
 import Shape
 import game.util.Vector2 as Vector2
+import pygame
+
 
 class Circle(Shape.Shape):
-    yaml_tag = u'!Circle'
-    def __getstate__(self):
-        data = Shape.Shape.__getstate__(self)
-        data['radius'] = self.radius
-        return data
     
     def __init__(self, transform, (x,y) =(0,0), r=0):
         Shape.Shape.__init__(self, transform)
         self._offset = (x,y)
         self.aabb = [-r, -r, r, r]
         self._radius = r
+        self.calAABB()
         
     def calAABB(self):
-        self.aabb = [-self.radius, -self.radius, self.radius, self.radius]
+        self.aabb = [-self.radius+self.center.x, -self.radius+self.center.y, self.radius+self.center.x, self.radius+self.center.y]
+        return self.aabb
+    
     
     @property
     def offset(self):
@@ -28,27 +28,38 @@ class Circle(Shape.Shape):
     
     @offset.setter
     def offset(self,value):
-        self._offset = value
+        if self._offset != value:
+            self._offset = value
+            self.calAABB()
         
     @property
     def center(self):
         return self.transform.position.add(Vector2.Vector2(*self.offset))
-    
-    @property
-    def width(self):
-        return self.radius*2
-    
-    @property
-    def height(self):
-        return self.radius*2
-    
+        
     @property
     def radius(self):
         return self._radius
     
     @radius.setter
     def radius(self,value):
-        self._radius = value
-        self.calAABB()
+        if self._radius != value:
+            self._radius = value
+            self.calAABB()
+    
+    @property
+    def points(self):
+        points = []
+        start = Vector2.Vector2(self.radius,0)
+        points.append(start)
+        angle = 0
+        while angle < 360:
+            points.append(start.rotate(angle) )
+            angle += 30
+        return points
+            
+    def draw(self, screen):
+        color = (255,0,0,100)
+        pos = self.center
+        pygame.draw.circle(screen, color, (int(pos.x),int(pos.y)), int(self.radius))
     
     

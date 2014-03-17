@@ -13,10 +13,9 @@ import Terrain
 import game.base.GameObject as GameObject
 import game.components.Collider as Collider
 import game.phys.shapes.Polygon as Polygon
-import game.lib.yaml as yaml
 
 #world is the area for all objects
-class World:
+class World(object):
     
     def __init__(self, main, size, gravity=Vector2.Vector2()):
         size = (main.screen.get_width(), main.screen.get_height())
@@ -36,11 +35,6 @@ class World:
     '''
     Terrain loading 
     '''
-    
-    #save terrain to text file  
-    def saveTerrain(self,fileName):
-        with open(fileName, 'w') as outfile:
-            yaml.dump(self.terrain,outfile)
     
     #loads terrain from text file
     def loadTerrain(self,map_file,objs):
@@ -68,18 +62,15 @@ class World:
     def createPolygon(self, points, static=True):
         obj = GameObject.GameObject(self)
         ((x, y), vectors) = Polygon.getPolygonFromPoints(points)
-        obj.collider = Collider.PolygonCollider(obj, x, y, vectors)
-        self.phyEng.add(obj.collider)
+        obj.transform.position = Vector2.Vector2(x,y)
+        obj.collider = Collider.PolygonCollider(obj, 0, 0, vectors)
         obj.collider.static = static
-        self.objects.append(obj)
         return obj
         
     def createWall(self, x, y, w, h, color=(0, 0, 0)):
         wall = RectObject.RectObject(self, x, y, w, h, color)
-        self.phyEng.add(wall.collider)
         wall.collider.static = True
         wall.collider.isTrigger = True
-        self.objects.append(wall)
         return wall
     
     def createCircle(self, x, y, r, color=(0, 0, 0), riged=True):
@@ -110,15 +101,18 @@ class World:
     
     def createRectGameObject(self,x,y,w,h,riged = True,trigger = False):
         obj = GameObject.GameObject(self)
-        col = Collider.RectCollider(obj, x, y, w, h)
+        obj.transform.position = Vector2.Vector2(x,y)
+        col = Collider.RectCollider(obj, 0, 0, w, h)
         col.isTrigger = trigger
         if riged:
             obj.addComponent(Rigid.Rigid)
         self.addObject(obj)
         return obj
+    
     def createCircGameObject(self,x,y,r,riged = True, trigger = False):
         obj = GameObject.GameObject(self)
-        col = Collider.CircleCollider(obj,x,y,r)
+        obj.transform.position = Vector2.Vector2(x,y)
+        col = Collider.CircleCollider(obj,0,0,r)
         col.isTrigger = trigger
         if riged:
             obj.addComponent(Rigid.Rigid)

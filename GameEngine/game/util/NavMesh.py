@@ -892,8 +892,7 @@ class Path:
             #graph.pygame.display.flip()
             #graph.pygame.time.wait(100)
         
-class PolyNode(graph.yaml.YAMLObject):
-    yaml_tag = u'!PolyNode'
+class PolyNode:
     def __init__( self, points):
         self.corners = [Vector2.Vector2( *pt ) for pt in points]
         # dude, counter-clockwise!
@@ -1005,8 +1004,7 @@ class PolyNode(graph.yaml.YAMLObject):
         return [c.sub( v ) for c in self.corners]
     
     
-class NavMeshData(graph.yaml.YAMLObject):
-    yaml_tag = u'!NavMeshData'
+class NavMeshData:
     def __init__( self, nm ):
         self.polys = []
         self.build_mesh( nm )

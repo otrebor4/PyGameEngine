@@ -7,7 +7,6 @@ import Component
 import Render
 import game.util.Vector2 as Vector2
 import game.Resources as Resources
-import game.lib.yaml as yaml
 import game.Game
 import pygame
 
@@ -16,15 +15,6 @@ Sprite component, hold and draw image sprite
 '''
 
 class Sprite(Render.Render):
-    yaml_tag =u'!Sprite'
-    def __getstate__(self):
-        data = Render.Render.__getstate__(self)
-        data['fileName'] = self.fileName
-        data['sprite_data'] = self.sprite_data
-        data['current'] = self.current
-        data['offset'] = self.offset
-        return data
-    
     def __setstate__(self,state):
         self.__dict__.update(state)
         if game.Game.Game.Instance() and self.fileName:
@@ -67,16 +57,7 @@ class Sprite(Render.Render):
 '''
 Component that animate sprite on a gameObject
 '''
-class SpriteAnim(Component.Component):
-    yaml_tag = u'!SpriteAnim'
-    def __getstate__(self):
-        data = Component.Component.__getstate__(self)
-        data['sprite'] = self.sprite
-        data['animations'] = self.animations
-        data['current_animation'] = self.current_animation
-        data['speed'] = self.speed
-        return data
-        
+class SpriteAnim(Component.Component):  
     def __init__(self, gameObject):
         Component.Component.__init__(self, gameObject)
         self.sprite = self.gameObject.getComponent("Sprite")
@@ -103,17 +84,7 @@ class SpriteAnim(Component.Component):
             animData.update(delta * self.speed)
             self.sprite.changeSprite(animData.currentFrame())
          
-class Animation(yaml.YAMLObject):
-    yaml_tag =u'!Animation'
-    
-    def __getstate__(self):
-        data = {}
-        data['name'] = self.name
-        data['speed'] = self.speed
-        data['frames'] = self.frames
-        data['current_frame'] = self.current_frame
-        return data
-    
+class Animation:
     def __init__(self, name="None", speed=1, frames=[]):
         self.name = name
         self.speed = speed  # currently time to change_to_next frame

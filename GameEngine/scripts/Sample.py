@@ -9,12 +9,6 @@ import pygame
 
 
 class Controller(Component.Component):
-    yaml_tag = u'!Controller'
-    def __getstate__(self):
-        data = Component.Component.__getstate__(self)
-        data['walkSpeed'] = self.walkSpeed
-        data['runSpeed'] = self.runSpeed
-        return data
     
     def __init__(self, gameObject):
         Component.Component.__init__(self, gameObject)

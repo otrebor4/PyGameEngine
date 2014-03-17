@@ -11,11 +11,10 @@ import Polygon
 import game.util.Vector2 as Vector2
 
 class Rectangle(Polygon.Polygon):
-    yaml_tag = u'!Rectangle'
-    def __init__(self, (x,y)=(0,0), w=0, h=0):
+    def __init__(self, transform, (x,y)=(0,0),(w,h) = (0,0), angle=0):
         self.offset = (x,y)
-        points = [Vector2.Vector2(0, 0),
-                  Vector2.Vector2(w, 0),
-                  Vector2.Vector2(w, h),
-                  Vector2.Vector2(0, h)]
-        Polygon.Polygon.__init__(self, x, y, points)
+        points = [Vector2.Vector2(-w/2, -h/2),
+                  Vector2.Vector2(w/2, -h/2),
+                  Vector2.Vector2(w/2, h/2),
+                  Vector2.Vector2(-w/2, h/2)]
+        Polygon.Polygon.__init__(self, transform, (x, y), points, angle = 0)

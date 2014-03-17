@@ -3,16 +3,10 @@ Created on Jan 28, 2014
 
 @author: otrebor
 '''
-import game.lib.yaml as yaml
 
 #Base class for a component
-class Component(yaml.YAMLObject):
-    yaml_tag = u'!Component'
-    def __getstate__(self):
-        data = {}
-        data['gameObject'] = self.gameObject
-        return data
-    
+class Component(object):
+
     def __init__(self, gameObject):
         self.gameObject = gameObject
         if self.gameObject != None:
@@ -24,7 +18,17 @@ class Component(yaml.YAMLObject):
     def Destroy(self):
         if self.gameObject:
             self.gameObject.Destroy()
-    
+
+    @property
+    def position(self):
+        if self.gameObject:
+            return self.gameObject.transform.position
+        return None
+    @position.setter
+    def position(self,value):
+        if self.gameObject:
+            self.gameObject.transform.position = value
+
     @property
     def transform(self):
         if self.gameObject:
@@ -37,6 +41,7 @@ class Component(yaml.YAMLObject):
             return self.gameObject.collider
         return None
     
+    @property
     def rigid(self):
         if self.gameObject:
             return self.gameObject.rigid

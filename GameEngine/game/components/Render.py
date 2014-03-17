@@ -12,7 +12,8 @@ class Render(Component.Component):
         Component.Component.__init__(self, gameObject)
         if gameObject:
             gameObject.renders.append(self)
-    
+        self.shape = None
+        
     def draw(self, screen):
         pass
 

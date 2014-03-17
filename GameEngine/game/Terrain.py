@@ -9,7 +9,6 @@ import game.components.Collider as Collider
 import base.GameObject as GameObject
 import game.util.Vector2 as Vector2
 import util.graph as graph
-import game.lib.yaml as yaml
 import game.components.LightSource as LightSource
 import game.util.NavMesh as NavMesh
 
@@ -24,15 +23,7 @@ class TyleInfo:
         (w, h) = (self.area[2], self.area[3]) if self.area != None else (64, 64)
         return (self.pos[0], self.pos[1], w, h)
     
-class Terrain(yaml.YAMLObject):
-    yaml_tag = u'!Terrain'
-    
-    def __getstate__(self):
-        data = {}
-        data['navMesh'] = self.navMesh 
-        
-        return data
-    
+class Terrain:    
     def __init__(self, resources=Resources.Resources(), size=(512, 512), world=None, color = (0,0,0,0)):
         self.size = size
         self.layers = []

@@ -8,33 +8,31 @@ import pygame
 import GameObject
 import game.components.Render as Render
 import game.components.Collider as Collider
+import game.util.Vector2 as Vector2
 
 #creates game object of circle type
 class CircleObject(GameObject.GameObject):
-    yaml_tag = u'!CircleObject'
-    def __init__(self, world, x, y, r, collor):
+    def __init__(self, world, x, y, r, color):
         GameObject.GameObject.__init__(self, world)
-        Collider.CircleCollider(self, x, y, r)
+        self.transform.position = Vector2.Vector2( x,y)
+        Collider.CircleCollider(self, 0, 0, r)
         render = self.addComponent(CircleRender)
-        render.color = collor
-  
-class CircleRender(Render.Render):
-    yaml_tag = u'!CircleRender'
-    def __getstate__(self):
-        data = Render.Render.__getstate__(self)
-        data['color'] = self.color
-        return data
-    
+        render.color = color
+        render.radius = r
+        
+class CircleRender(Render.Render):    
     def __init__(self, gameObject):
         Render.Render.__init__(self, gameObject)
         self.color = (0,0,0,0)
+        self.radius = 0
+        self.offset = Vector2.Vector2(0,0)
+        
+    @property
+    def center(self):
+        return self.transform.position.add( self.offset).xy()
         
     def draw(self, screen):
-        pos = self.gameObject.shape.position
-        pygame.draw.circle(screen, self.color, (int(pos.x), int(pos.y)), int(self.gameObject.shape.radius))
-        
-        
-        
-        
+        center = self.center
+        pygame.draw.circle(screen, self.color, ( int(center[0]), int(center[1])), self.radius)
         
         

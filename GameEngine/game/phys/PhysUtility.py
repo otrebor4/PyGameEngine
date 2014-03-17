@@ -8,50 +8,47 @@ import math
 import game.phys.shapes.Circle
 import game.phys.shapes.Polygon
 import game.util.Vector2 as Vector2
+import game.components.Collider
 
 class CollisionInfo:
     def __init__(self):
-        self.shape1 = None
-        self.shape2 = None
+        self.collider1 = game.components.Collider.Collider(None)
+        self.collider1 = None
+        self.collider2 = game.components.Collider.Collider(None)
+        self.collider2 = None
         self.distance = 0
         self.direction = Vector2.Vector2()  # normal vector        
 
 # fast aabb overlap check
-
 def checkAABBOverlap(obj1, obj2):
-    aabb1 = obj1.gameObject.shape.calAABB() if obj1.gameObject.shape != None else None
-    aabb2 = obj2.gameObject.shape.calAABB() if obj2.gameObject.shape != None else None
+    aabb1 = obj1.calAABB() if obj1 != None else None
+    aabb2 = obj2.calAABB() if obj2 != None else None
     
-    if aabb1 == None or aabb2 == None:  # missing at least one shape can't collide
+    if aabb1 == None or aabb2 == None:  # missing at least one collider can't collide
         return False
     
-    return not (aabb1[3] < aabb2[1] or
+    return not ( aabb1[3] < aabb2[1] or
                  aabb1[1] > aabb2[3] or
                  aabb1[0] > aabb2[2] or
                  aabb1[2] < aabb2[0])
 
-
-
 # return a collisionInfo if happen or None if not collision detected
-
 def testCollision(obj1, obj2):
     if not checkAABBOverlap(obj1, obj2):
         return None
-    shape1 = obj1.gameObject.shape
-    shape2 = obj2.gameObject.shape
     # circle circle collision
-    if isinstance(shape1, game.phys.shapes.Circle.Circle) and isinstance(shape2, game.phys.shapes.Circle.Circle):
-        return testCircleCircle(shape1, shape2)
+    if isinstance(obj1, game.components.Collider.CircleCollider) and isinstance(obj2, game.components.Collider.CircleCollider):
+        return testCircleCircle(obj1, obj2)
         
     # polygon polygon collision
-    if isinstance(shape1, game.phys.shapes.Polygon.Polygon) and isinstance(shape2, game.phys.shapes.Polygon.Polygon):
-        return testPolygonSat(shape1, shape2)
+    if isinstance(obj1, game.components.Collider.PolygonCollider) and isinstance(obj2, game.components.Collider.PolygonCollider):
+        return testPolygonSat(obj1, obj2)
         
     # polygon-circle collision
-    if isinstance(shape1, game.phys.shapes.Circle.Circle):
-        return testCirclePolygonSat(shape1, shape2, False)
+    if isinstance(obj1, game.components.Collider.CircleCollider):
+        return testCirclePolygonSat(obj1, obj2, False)
     else:
-        return testCirclePolygonSat(shape2, shape1, True)
+        return testCirclePolygonSat(obj2, obj1, True)
            
 def testCircleCircle(c1, c2):
     totalRadius = c1.radius + c2.radius
@@ -60,8 +57,8 @@ def testCircleCircle(c1, c2):
         return None
     else:
         info = CollisionInfo()
-        info.shape1 = c1
-        info.shape2 = c2
+        info.collider1 = c1
+        info.collider2 = c2
         info.direction = c1.position.sub(c2.position).normalize()
         
         info.distance = math.sqrt(distSqr) - totalRadius;
@@ -71,33 +68,23 @@ def testPolygonSat(poly1, poly2):
     shortestDist = INF
     
     result = CollisionInfo()
-    result.shape1 = poly1
-    result.shape2 = poly2
+    result.collider1 = poly1
+    result.collider2 = poly2
     
     p1 = poly1.getPoints()
     p2 = poly2.getPoints()
-    # get offset
-    # vOffset = Vector2.Vector2()# poly1.position.sub(poly2.position)
-    
     for i in range(0, len(p1)):
         vAxis = getAxisNormal(p1, i)
         # project polygon 1
         (min0, max0) = getMinMax(vAxis, p1)
-                
         # project polygon 2
         (min1, max1) = getMinMax(vAxis, p2)
-        
-        # sOffset = vAxis.dot(vOffset)
-        # min0 = min0 + sOffset
-        # max0 = max0 + sOffset
-        
         (dist, new) = makeResult(result, min0, max0, min1, max1, vAxis, True)
         if dist <= shortestDist:
             shortestDist = dist
             if new == None:
                 return None
             result = new
-        
     return result
     
 def testCirclePolygonSat(circle, polygon, flip):
@@ -106,11 +93,11 @@ def testCirclePolygonSat(circle, polygon, flip):
     closestPoint = Vector2.Vector2()
     result = CollisionInfo()
     if flip:
-        result.shape1 = polygon
-        result.shape2 = circle
+        result.collider1 = polygon
+        result.collider2 = circle
     else:
-        result.shape1 = circle
-        result.shape2 = polygon
+        result.collider1 = circle
+        result.collider2 = polygon
         
     p1 = polygon.getPoints()
     
@@ -132,11 +119,6 @@ def testCirclePolygonSat(circle, polygon, flip):
     min1 = vAxis.dot(circle.position)
     max1 = min1 + circle.radius
     min1 = min1 - circle.radius
-    
-    # sOffset = vAxis.dot(p1[0])
-    # min0 = min0 + sOffset
-    # max0 = max0 + sOffset
-    
     (dist, new) = makeResult(result, min0, max0, min1, max1, vAxis, flip)
     if dist < shorterDist:
         shorterDist = dist
@@ -168,8 +150,8 @@ def testCirclePolygonSat(circle, polygon, flip):
 
 def makeResult(old, min0, max0, min1, max1, vAxis, flip=False):
     result = CollisionInfo()
-    result.shape1 = old.shape1
-    result.shape2 = old.shape2
+    result.collider1 = old.collider1
+    result.collider2 = old.collider2
     if max0 < min1:
         return (0, None)
     if max1 < min0:
@@ -207,8 +189,8 @@ def getAxisNormal(points, index):
 
 def HandleCollision(obj1, obj2, info):
     # only riged component respond to collision
-    rig1 = obj1.gameObject.riged   
-    rig2 = obj2.gameObject.riged
+    rig1 = obj1.rigid   
+    rig2 = obj2.rigid
     if (rig1 == None or rig1.kinematic) and (rig2 == None or rig2.kinematic):  # why try to handle collision they don't respond to collision
         return 
     normal = info.direction.normalize()
@@ -240,7 +222,6 @@ def HandleCollision(obj1, obj2, info):
     
 INF = 1000000000
 def div(x, y):
-    # x/y
     if y == 0:
         return INF
     if y > INF:

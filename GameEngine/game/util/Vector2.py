@@ -5,8 +5,6 @@ Created on Jan 22, 2014
 '''
 import math
 
-import game.lib.yaml as yaml
-
 E=0.001
 
 def mid( a, b ):
@@ -106,8 +104,7 @@ def use_key( val, fn ):
         return val
     return fn( val )
 
-class Vector2(yaml.YAMLObject):
-    yaml_tag = u'!Vector2'
+class Vector2:
     def __init__(self, x=0, y=0):
         self.x = x
         self.y = y

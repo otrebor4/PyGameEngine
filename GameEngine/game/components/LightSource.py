@@ -9,13 +9,6 @@ import game.phys.shapes.Polygon as Polygon
 
 #general light class
 class Light(Component.Component):
-    yaml_tag = u'!Light'
-    def __getstate__(self):
-        data = Component.Component.__getstate__(self)
-        data['light'] = self.light
-        data['position'] = self.position
-        return data
-    
     def __init__(self, gameObject):
         Component.Component.__init__(self, gameObject)
         self.light = None
@@ -52,23 +45,29 @@ class FlashLight(Component.Component):
         self.startHeight =start
         
     def makePolygon(self):
-        points = [ (0,0),(0,-self.startHeight/2) , (self.widht,-self.height/2), (self.widht, self.height/2),(0, self.startHeight/2) ]
-        ((x,y),pt) = Polygon.getPolygonFromPoints(points)
-        return Polygon.Polygon( x,y, pt)
+        if self.catche is None:
+            points = [ (0,0),(0,-self.startHeight/2) , (self.widht,-self.height/2), (self.widht, self.height/2),(0, self.startHeight/2) ]
+            ((x,y),pt) = Polygon.getPolygonFromPoints(points)
+            self.catche = Polygon.Polygon(self.gameObject.transform, (x,y), pt)
+        return self.catche
     
+    '''
+    TODO:Need fix and use shape angle and offset instead
+    '''
     def update(self,delta):
         if not self.catche or self.catcheAngle != self.angle:
-            self.catche = self.makePolygon().rotate(self.angle)
+            self.catche = self.makePolygon()
+            self.catche.angle = self.angle
             self.catcheAngle = self.angle
         polygon = self.catche
-        offset = (0-polygon.Left(),0- polygon.Top())
-        points = polygon.Points()
+        offset = (0-polygon.left,0- polygon.top)
+        points = polygon.pointlist
         points = self.addOffSet(points,offset)
-        w=polygon.Width()
-        h=polygon.Height()
+        w=polygon.width
+        h=polygon.height
         light = pygame.Surface( (w,h), pygame.SRCALPHA,32)
         light.fill( (0,0,0,0))
-        pos = self.gameObject.shape.position.xy() if self.gameObject.shape else (0,0)
+        pos = self.gameObject.transform.position.xy() if self.gameObject.transform.position else (0,0)
         pos = (pos[0]+self.offset[0]-offset[0], pos[1]+self.offset[1]-offset[1])
         pygame.draw.polygon(light, self.color, points )
         self.gameObject.world.terrain.addLight(light,pos)
@@ -81,31 +80,19 @@ class FlashLight(Component.Component):
  
 #light for the entire area in play   
 class EnvironmentLight(Component.Component):
-    yaml_tag = u'!EnvironmentLight'
-    def __getstate__(self):
-        data = Component.Component.__getstate__(self)
-        data['color'] = self.color
-        return data
-    
     def __init__(self, gameObject):
         Component.Component.__init__(self, gameObject)
         self.color = (10,10,10,255)
         
+    def setVal(self, lightColor= (10,10,10,255)):
+        self.color = lightColor
         
     def update(self,delta):
         light = pygame.display.get_surface().convert_alpha()
         light.fill(self.color)
         self.gameObject.world.terrain.addLight(light,(0,0))
         
-class SpotLight(Component.Component):
-    yaml_tag = u'!SpotLight'
-    def __getstate__(self):
-        data =  Component.Component.__getstate__(self)
-        data['position'] = self.position
-        data['radius'] = self.radius
-        data['color'] = self.color
-        return data
-        
+class SpotLight(Component.Component):        
     def __init__(self, gameObject):
         Component.Component.__init__(self, gameObject)
         self.position = None

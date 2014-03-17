@@ -5,28 +5,14 @@ Created on Jan 27, 2014
 '''
 import inspect
 import sys
-import game.lib.yaml as yaml
 import game.components.Transform as Transform
 
-class Object():
+class Object(object):
     def __init__(self):
         pass
 
-class GameObject(yaml.YAMLObject):
-    yaml_tag = u'!GameObject'
-    
-    def __getstate__(self):
-        data = {}
-        data['name'] = self.name 
-        data['collider'] = self.collider
-        data['renders'] = self.renders
-        data['GUIs'] = self.GUIs
-        data['components'] = self.components
-        data['rigid'] = self.rigid
-        data['type'] = self.type
-        data['transform'] = self.transform
-        return data
-    
+class GameObject(object):
+
     def __init__(self, world):
         self.name = "object"
         self.type = 'object'

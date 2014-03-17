@@ -6,7 +6,6 @@ Created on Feb 13, 2014
 import pygame
 import Vector2
 import game.util.LineTest as LineTest
-import game.lib.yaml as yaml
 
 class Node:
     def __init__(self,value = None):
@@ -15,10 +14,7 @@ class Node:
     def eq(self,val):
         return self.value == val
     
-class Graph(yaml.YAMLObject):
-    yaml_tag = '!Graph'
-    
-    
+class Graph:
     def __init__(self, points = None):
         self.Debug = False
         self.edges = {}
