@@ -12,7 +12,7 @@ class Transform(Component.Component):
         self._local_position = Vector2.Zero
         self._parent = None
         self._childs = []
-        self._local_rotation = 0
+        self._rotation = 0
         
     def _addChild(self,value):
         if value not in self._childs:
@@ -43,32 +43,31 @@ class Transform(Component.Component):
         self._local_position = value
     
     @property
-    def localRotation(self):
-        return self._local_rotation
-    @localRotation.setter
-    def localRotation(self,value):
-        self._local_rotation = value
-
-
+    def rotation(self):
+        return self._rotation
+    @rotation.setter
+    def rotation(self,value):
+        self._rotation = value
+        
+    @property
+    def parentRotation(self):
+        return self.parent.rotation if self.parent else 0
+    @parentRotation.setter
+    def parentRoation(self,value):
+        if self.parent:
+            self.parent.rotatoin = value
+        
     @property
     def position(self):
         if self._parent:
-            return self._parent.position.add(self.localPosition.rotate(self.parent.localRotation))
+            return self._parent.position.add(self.localPosition.rotate(self.parent.rotation))
         else:
             return self.localPosition
     @position.setter
     def position(self,value):
         if self._parent:
-            offset = value.rotate(-self.parent.localRotation).sub(self._parent.position)
+            offset = value.rotate(-self.parent.rotation).sub(self._parent.position)
             self.localPosition = offset
         else:
             self.localPosition = value
     
-    '''
-    @property
-    def rotation(self):
-        return self._rotation
-    @rotation.setter
-    def rotation(self,value):
-        pass    
-    '''

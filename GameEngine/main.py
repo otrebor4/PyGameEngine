@@ -12,9 +12,9 @@ class Main(game.Game):
     def __init__(self):
         game.Game.__init__(self)
         self.DEBUG = True
-        self.world.addObject(self.circle())
+        #self.world.addObject(self.circle())
         #self.world.addObject(self.testCircle((255,255), 10))
-        self.world.addObject(self.testRect((100,100), (100,100)))
+        self.world.addObject(self.testRect((500,500), (100,100)))
         #self.world.addObject(self.testRect((255,500), (100,100)))
         self.world.addObject(self.light( ))
         
@@ -27,6 +27,7 @@ class Main(game.Game):
     def testRect(self, (x,y), (w,h)):
         obj = self.world.createRectGameObject(x, y, w, h, True, False)
         obj.name = "testC"
+        obj.addComponent(Sample.Rotate)
         return obj
     
     def light(self):
@@ -40,9 +41,9 @@ class Main(game.Game):
         circle.name = 'player'
         circle.rigid.velocity = Vector2.Vector2(0,100)
         circle.addComponent(Sample.Controller)
-        flashLight = circle.addComponent(LightSource.FlashLight)
-        flashLight.setVals(350,250,180,(255,0,0),20, (0,0))
-        circle.addComponent(Sample.FlashLightController)
+        #flashLight = circle.addComponent(LightSource.FlashLight)
+        #flashLight.setVals(350,250,180,(255,0,0),20, (0,0))
+        #circle.addComponent(Sample.FlashLightController)
         
         return circle
         

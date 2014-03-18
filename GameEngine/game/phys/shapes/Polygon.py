@@ -18,6 +18,7 @@ class Polygon(Shape.Shape):
         self._corners = [ Vector2.Vector2(pt.x, pt.y) for pt in points ]
         self._cache = None
         self._cachePos = Vector2.Zero
+        self._cacheAngle = 0
         self.calAABB()
         
     def calAABB(self):
@@ -29,19 +30,23 @@ class Polygon(Shape.Shape):
     
     @property
     def corners(self):
+        if self._cacheAngle != self.transform.rotation:
+            self._cache = None
+        
         if self._cache:
             if self._cachePos != self.center:
                 offset = self.center.sub(self._cachePos)
                 self._cachePos = self.center
-                offset = offset.rotate(self.transform.localRotation)
+                offset = offset.rotate(self.transform.rotation)
                 for i in range(0, len(self._cache)):
                     self._cache[i] = self._cache[i].add(offset)
             return self._cache
         
         self._cache = []
         for point in self._corners:
-            self._cache.append(point.rotate(self.angle).add(self.center).rotate(self.transform.localRotation))
+            self._cache.append(point.rotate(self.angle+self.transform.rotation).add(self.center).rotate(self.transform.parentRoation))
         self._cachePos = self.center
+        self._cacheAngle = self.transform.rotation
         return self._cache
     
     @property
@@ -95,7 +100,12 @@ class Polygon(Shape.Shape):
     def draw(self, screen):
         color = (255,0,0,100)
         pygame.draw.polygon(screen, color, self.pointlist)
-        self.drawaabb(screen)
+        vt = Vector2.Right
+        vt = vt.rotate(self.transform.rotation).scale(self.width/2)
+        c = self.center
+        vt = vt.add(c)
+        pygame.draw.aaline(screen, (0,255,0), ( int(c.x),int(c.y)), (int(vt.x),int(vt.y)) )
+        #self.drawaabb(screen)
         
     def drawaabb(self,screen):
         color = (0,255,0,100)
