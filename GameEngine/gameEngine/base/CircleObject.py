@@ -6,9 +6,9 @@ Created on Jan 28, 2014
 import pygame
 
 import GameObject
-import game.components.Render as Render
-import game.components.Collider as Collider
-import game.util.Vector2 as Vector2
+import gameEngine.components.Render as Render
+import gameEngine.components.Collider as Collider
+import gameEngine.util.Vector2 as Vector2
 
 #creates game object of circle type
 class CircleObject(GameObject.GameObject):

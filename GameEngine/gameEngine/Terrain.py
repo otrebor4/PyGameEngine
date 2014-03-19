@@ -5,12 +5,12 @@ Created on Feb 3, 2014
 '''
 import pygame
 import Resources
-import game.components.Collider as Collider
+import gameEngine.components.Collider as Collider
 import base.GameObject as GameObject
-import game.util.Vector2 as Vector2
+import gameEngine.util.Vector2 as Vector2
 import util.graph as graph
-import game.components.LightSource as LightSource
-import game.util.NavMesh as NavMesh
+import gameEngine.components.LightSource as LightSource
+import gameEngine.util.NavMesh as NavMesh
 
 class TyleInfo:
     def __init__(self, pos, area=None, data = {'image':None,'name':''}):

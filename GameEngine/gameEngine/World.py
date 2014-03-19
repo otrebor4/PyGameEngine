@@ -3,16 +3,16 @@ Created on Jan 27, 2014
 
 @author: otrebor
 '''
-import game.components.Sprite
-import game.base.CircleObject as CircleObject
-import game.base.RectObject as RectObject
+import gameEngine.components.Sprite
+import gameEngine.base.CircleObject as CircleObject
+import gameEngine.base.RectObject as RectObject
 import phys.PhysEng as PhysEng
-import game.components.Rigid as Rigid
+import gameEngine.components.Rigid as Rigid
 import util.Vector2 as Vector2
 import Terrain
-import game.base.GameObject as GameObject
-import game.components.Collider as Collider
-import game.phys.shapes.Polygon as Polygon
+import gameEngine.base.GameObject as GameObject
+import gameEngine.components.Collider as Collider
+import gameEngine.phys.shapes.Polygon as Polygon
 
 #world is the area for all objects
 class World(object):
@@ -93,9 +93,9 @@ class World(object):
         if riged:
             r.addComponent(Rigid.Rigid)
             if animations:
-                game.components.Sprite.addAnimator(r, sprite_data, self.main.resources)
+                gameEngine.components.Sprite.addAnimator(r, sprite_data, self.main.resources)
             else:
-                game.components.Sprite.addSprite(r, sprite_data, self.main.resources)
+                gameEngine.components.Sprite.addSprite(r, sprite_data, self.main.resources)
         self.addObject(r)
         return r
     

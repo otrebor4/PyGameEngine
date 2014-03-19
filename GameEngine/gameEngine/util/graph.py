@@ -5,7 +5,7 @@ Created on Feb 13, 2014
 '''
 import pygame
 import Vector2
-import game.util.LineTest as LineTest
+import gameEngine.util.LineTest as LineTest
 
 class Node:
     def __init__(self,value = None):

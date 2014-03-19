@@ -3,21 +3,21 @@ Created on Mar 5, 2014
 
 @author: rfloresx
 '''
-import game.Game as game
-import game.util.Vector2 as Vector2
+import gameEngine.Game as game
+import gameEngine.util.Vector2 as Vector2
 from scripts import Sample
-import game.components.LightSource as LightSource
+import gameEngine.components.LightSource as LightSource
 
 class Main(game.Game):
     def __init__(self):
         game.Game.__init__(self)
         self.DEBUG = True
         #self.world.addObject(self.circle())
-        #self.world.addObject(self.testCircle((255,255), 10))
-        #self.world.addObject(self.testRect((500,500), (100,100)))
-        #self.world.addObject(self.testRect((255,500), (100,100)))
+        self.world.addObject(self.testCircle((255,255), 10))
+        self.world.addObject(self.testRect((500,500), (100,100)))
+        self.world.addObject(self.testRect((255,500), (100,100)))
         self.world.addObject(self.light( ))
-        self.addTest2Objects((500, 500), 50, (50, 50))
+        self.addTest2Objects((0, 0), 50, (50, 50))
         #self.world.setLight( (255,255,255,255))
         
     def addTest2Objects(self, (x,y), r, (w,h)):

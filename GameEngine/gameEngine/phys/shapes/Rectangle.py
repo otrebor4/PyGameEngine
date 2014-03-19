@@ -8,7 +8,7 @@ Rectangle position is the left top corner
 '''
 
 import Polygon
-import game.util.Vector2 as Vector2
+import gameEngine.util.Vector2 as Vector2
 
 class Rectangle(Polygon.Polygon):
     def __init__(self, transform, (x,y)=(0,0),(w,h) = (0,0), angle=0):

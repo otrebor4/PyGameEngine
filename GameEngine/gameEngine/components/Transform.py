@@ -3,7 +3,7 @@ Created on Feb 27, 2014
 
 @author: rfloresx
 '''
-import game.util.Vector2 as Vector2
+import gameEngine.util.Vector2 as Vector2
 import Component
 #work in progress
 class Transform(Component.Component):
@@ -13,6 +13,7 @@ class Transform(Component.Component):
         self._parent = None
         self._childs = []
         self._rotation = 0
+        self.lockToParent = True # if lockToParent is false: moving transform position won't affect parent position
         
     def _addChild(self,value):
         if value not in self._childs:
@@ -66,8 +67,12 @@ class Transform(Component.Component):
     @position.setter
     def position(self,value):
         if self._parent:
-            offset = value.sub(self._parent.position).rotate(-self.parent.rotation) #.sub(self._parent.position)
-            self.localPosition = offset
+            if self.lockToParent:
+                offset = self.position.sub( value )
+                self._parent.position = self.parentPosition.add(offset)
+            else:
+                offset = value.sub(self._parent.position).rotate(-self.parent.rotation) #.sub(self._parent.position)
+                self.localPosition = offset
         else:
             self.localPosition = value
             

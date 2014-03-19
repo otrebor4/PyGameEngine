@@ -3,8 +3,8 @@ Created on Jan 28, 2014
 
 @author: otrebor
 '''
-import game.components.Component as Component
-import game.util.Vector2 as Vector2
+import gameEngine.components.Component as Component
+import gameEngine.util.Vector2 as Vector2
 
 
 #A rigid gives control of an object's position through physics simulation.

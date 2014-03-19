@@ -7,7 +7,7 @@ Created on Jan 28, 2014
 points are not world points is a set of vectors using x,y as reference point, to simplify movement
 '''
 import Shape
-import game.util.Vector2 as Vector2
+import gameEngine.util.Vector2 as Vector2
 import pygame
 
 class Polygon(Shape.Shape):
@@ -20,6 +20,7 @@ class Polygon(Shape.Shape):
         self._cachePos = Vector2.Zero
         self._cacheAngle = 0
         self._cachePAngle = 0
+        self._cacheRadius = None
         self.calAABB()
         
     def calAABB(self):
@@ -93,13 +94,18 @@ class Polygon(Shape.Shape):
         
     @property
     def radius(self):
-        return self._radius
-    
+        if self._cacheRadius:
+            return self._cacheRadius
+        self._cacheAngle = 0
+        for p in self._corners:
+            d = p.magnitude
+            if d > self._cacheAngle:
+                self._cacheAngle = d
+        return self._cacheAngle
     @radius.setter
     def radius(self,value):
-        self._radius = value
-        self.calAABB()
-    
+        pass
+        
     @property
     def pointlist(self):
         pl = []

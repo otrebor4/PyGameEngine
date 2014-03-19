@@ -6,9 +6,9 @@ Created on Jan 28, 2014
 import pygame
 
 import GameObject
-import game.components.Collider as Collider
-import game.components.Render as Render
-import game.util.Vector2 as Vector2
+import gameEngine.components.Collider as Collider
+import gameEngine.components.Render as Render
+import gameEngine.util.Vector2 as Vector2
 #creates game object of rectangle type
 class RectObject(GameObject.GameObject):
     def __init__(self, world, (x, y)=(0,0), (w, h)=(0,0), color=None):

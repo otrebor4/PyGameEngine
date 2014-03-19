@@ -6,7 +6,7 @@ Created on Jan 30, 2014
 import sys
 
 import pygame
-import game.Debug as Debug
+import gameEngine.Debug as Debug
 import util.Vector2 as Vector2
 import World
 import Resources

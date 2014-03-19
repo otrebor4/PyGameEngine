@@ -5,7 +5,7 @@ Created on Feb 11, 2014
 '''
 import pygame
 import Component
-import game.phys.shapes.Polygon as Polygon
+import gameEngine.phys.shapes.Polygon as Polygon
 
 #general light class
 class Light(Component.Component):

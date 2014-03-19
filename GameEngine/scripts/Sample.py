@@ -3,8 +3,8 @@ Created on Mar 5, 2014
 
 @author: rfloresx
 '''
-import game.components.Component as Component
-import game.util.Vector2 as Vector2
+import gameEngine.components.Component as Component
+import gameEngine.util.Vector2 as Vector2
 import pygame
 
 

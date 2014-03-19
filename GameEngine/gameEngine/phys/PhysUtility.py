@@ -5,16 +5,16 @@ Created on Jan 22, 2014
 '''
 import math
 
-import game.phys.shapes.Circle
-import game.phys.shapes.Polygon
-import game.util.Vector2 as Vector2
-import game.components.Collider
+import gameEngine.phys.shapes.Circle
+import gameEngine.phys.shapes.Polygon
+import gameEngine.util.Vector2 as Vector2
+import gameEngine.components.Collider
 
 class CollisionInfo:
     def __init__(self):
-        self.collider1 = game.components.Collider.Collider(None)
+        self.collider1 = gameEngine.components.Collider.Collider(None)
         self.collider1 = None
-        self.collider2 = game.components.Collider.Collider(None)
+        self.collider2 = gameEngine.components.Collider.Collider(None)
         self.collider2 = None
         self.distance = 0
         self.direction = Vector2.Vector2()  # normal vector        
@@ -37,15 +37,15 @@ def testCollision(obj1, obj2):
     if not checkAABBOverlap(obj1, obj2):
         return None
     # circle circle collision
-    if isinstance(obj1, game.components.Collider.CircleCollider) and isinstance(obj2, game.components.Collider.CircleCollider):
+    if isinstance(obj1, gameEngine.components.Collider.CircleCollider) and isinstance(obj2, gameEngine.components.Collider.CircleCollider):
         return testCircleCircle(obj1, obj2)
         
     # polygon polygon collision
-    if isinstance(obj1, game.components.Collider.PolygonCollider) and isinstance(obj2, game.components.Collider.PolygonCollider):
+    if isinstance(obj1, gameEngine.components.Collider.PolygonCollider) and isinstance(obj2, gameEngine.components.Collider.PolygonCollider):
         return testPolygonSat(obj1, obj2)
         
     # polygon-circle collision
-    if isinstance(obj1, game.components.Collider.CircleCollider):
+    if isinstance(obj1, gameEngine.components.Collider.CircleCollider):
         return testCirclePolygonSat(obj1, obj2, False)
     else:
         return testCirclePolygonSat(obj2, obj1, True)

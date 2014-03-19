@@ -7,10 +7,10 @@ Created on Jan 22, 2014
 physical object template
 '''
 
-import game.components.Component as Component
-import game.phys.shapes.Rectangle as Rectangle
-import game.phys.shapes.Circle as Circle
-import game.phys.shapes.Polygon as Polygon
+import gameEngine.components.Component as Component
+import gameEngine.phys.shapes.Rectangle as Rectangle
+import gameEngine.phys.shapes.Circle as Circle
+import gameEngine.phys.shapes.Polygon as Polygon
 
 #Collider components define the shape of an object for the purposes of physical collisions
 #Collider depends on shape to determine its position,size,dimensions
@@ -89,13 +89,12 @@ class CircleCollider(Collider):
         Collider.__init__(self, gameObject)
         self.shape = Circle.Circle(self.transform, (x, y), radius)
         
-class RectCollider(Collider):
-    def __init__(self, gameObject, x=0, y=0, w=0, h=0):
-        Collider.__init__(self, gameObject)
-        self.shape = Rectangle.Rectangle(self.transform, (x, y), (w, h))
-        
 class PolygonCollider(Collider):
     def __init__(self, gameObject, x=0, y=0, points=[]):
         Collider.__init__(self, gameObject)
         self.shape = Polygon.Polygon(self.transform, (0, 0), points)
         
+class RectCollider(PolygonCollider):
+    def __init__(self, gameObject, x=0, y=0, w=0, h=0):
+        Collider.__init__(self, gameObject)
+        self.shape = Rectangle.Rectangle(self.transform, (x, y), (w, h))       

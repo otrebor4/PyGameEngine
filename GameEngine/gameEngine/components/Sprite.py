@@ -5,9 +5,9 @@ Created on Feb 5, 2014
 '''
 import Component
 import Render
-import game.util.Vector2 as Vector2
-import game.Resources as Resources
-import game.Game
+import gameEngine.util.Vector2 as Vector2
+import gameEngine.Resources as Resources
+import gameEngine.Game
 import pygame
 
 '''
@@ -17,8 +17,8 @@ Sprite component, hold and draw image sprite
 class Sprite(Render.Render):
     def __setstate__(self,state):
         self.__dict__.update(state)
-        if game.Game.Game.Instance() and self.fileName:
-            g = game.Game.Game.Instance()
+        if gameEngine.Game.Game.Instance() and self.fileName:
+            g = gameEngine.Game.Game.Instance()
             self.image = g.resources.loadImage(self.fileName)
     
     def __init__(self, gameObject):
@@ -48,7 +48,7 @@ class Sprite(Render.Render):
     def getSprite(self,name):
         area = self.sprite_data[name] if self.sprite_data.has_key(name) else None
         if area:
-            img = game.Game.pygame.Surface( (area[2],area[3]), pygame.SRCALPHA, 32)
+            img = gameEngine.Game.pygame.Surface( (area[2],area[3]), pygame.SRCALPHA, 32)
             img.fill( (0,0,0,0))
             img.blit(self.image,(0,0), area)
             return img

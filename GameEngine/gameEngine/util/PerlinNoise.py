@@ -6,7 +6,7 @@ Created on Feb 23, 2014
 
 import pygame
 import sys
-from game.util import Perli
+from gameEngine.util import Perli
 import random
 import math
 

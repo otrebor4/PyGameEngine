@@ -5,7 +5,7 @@ Created on Jan 27, 2014
 '''
 import inspect
 import sys
-import game.components.Transform as Transform
+import gameEngine.components.Transform as Transform
 
 class Object(object):
     def __init__(self):

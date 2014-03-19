@@ -4,7 +4,7 @@ Created on Jan 28, 2014
 @author: otrebor
 '''
 import Shape
-import game.util.Vector2 as Vector2
+import gameEngine.util.Vector2 as Vector2
 import pygame
 
 
@@ -62,7 +62,7 @@ class Circle(Shape.Shape):
         pos = self.center
         pygame.draw.circle(screen, color, (int(pos.x),int(pos.y)), int(self.radius))
         vt = Vector2.Right
-        vt = vt.rotate(self.transform.rotation).scale(self.radius/2)
+        vt = vt.rotate(self.transform.rotation).scale(self.radius)
         c = self.center
         vt = vt.add(c)
         pygame.draw.aaline(screen, (0,255,0), ( int(c.x),int(c.y)), (int(vt.x),int(vt.y)) )

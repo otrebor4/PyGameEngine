@@ -3,8 +3,8 @@ Created on Jan 28, 2014
 
 @author: otrebor
 '''
-import game.components.Transform as Transform
-import game.util.Vector2 as Vector2
+import gameEngine.components.Transform as Transform
+import gameEngine.util.Vector2 as Vector2
 
 class Shape:
     def __init__(self,transform):

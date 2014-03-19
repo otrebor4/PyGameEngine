@@ -3,7 +3,7 @@ Created on Jan 29, 2014
 
 @author: otrebor
 '''
-from game.phys import PhysUtility
+from gameEngine.phys import PhysUtility
 import Events
 
 class PhysEng:
