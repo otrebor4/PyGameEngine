@@ -61,5 +61,9 @@ class Circle(Shape.Shape):
         color = (255,0,0,100)
         pos = self.center
         pygame.draw.circle(screen, color, (int(pos.x),int(pos.y)), int(self.radius))
-    
+        vt = Vector2.Right
+        vt = vt.rotate(self.transform.rotation).scale(self.radius/2)
+        c = self.center
+        vt = vt.add(c)
+        pygame.draw.aaline(screen, (0,255,0), ( int(c.x),int(c.y)), (int(vt.x),int(vt.y)) )
     

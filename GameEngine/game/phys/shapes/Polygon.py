@@ -19,6 +19,7 @@ class Polygon(Shape.Shape):
         self._cache = None
         self._cachePos = Vector2.Zero
         self._cacheAngle = 0
+        self._cachePAngle = 0
         self.calAABB()
         
     def calAABB(self):
@@ -30,34 +31,49 @@ class Polygon(Shape.Shape):
     
     @property
     def corners(self):
-        if self._cacheAngle != self.transform.rotation:
+        if self._cacheAngle != self.angle:
             self._cache = None
         
+        if self._cache:
+            pass
+        self._cache = []
+        for point in self._corners:
+            self._cache.append(point.rotate(self.angle).add(self.transform.localPosition).rotate(self.transform.parentRotation).add(self.transform.parentPosition) )
+        return self._cache
+    
+    
+        '''
+        if self._cacheAngle != self.transform.rotation:
+            self._cache = None
+        if self._cachePAngle != self.transform.parentRotation:
+            self._cache = None
         if self._cache:
             if self._cachePos != self.center:
                 offset = self.center.sub(self._cachePos)
                 self._cachePos = self.center
-                offset = offset.rotate(self.transform.rotation)
+                offset = offset.rotate(self.transform.parentRotation)
                 for i in range(0, len(self._cache)):
                     self._cache[i] = self._cache[i].add(offset)
             return self._cache
         
         self._cache = []
         for point in self._corners:
-            self._cache.append(point.rotate(self.angle+self.transform.rotation).add(self.center).rotate(self.transform.parentRoation))
+            self._cache.append(point.rotate(self.angle).add(self.transform.localPosition).rotate(self.transform.parentRotation).add(self.transform.parentPosition))
         self._cachePos = self.center
         self._cacheAngle = self.transform.rotation
+        self._cachePAngle = self.transform.parentRotation
         return self._cache
-    
+        '''
     @property
     def angle(self):
-        return self._angle
+        return self.transform.rotation+ self._angle
     
     @angle.setter
     def angle(self,value):
-        if self._angle != value:
+        value2 = value - self.transform.rotation
+        if self._angle != value2:
+            self._angle = value2
             self._cache = None
-            self._angle = value
             self.calAABB()
         
     @property
@@ -70,7 +86,7 @@ class Polygon(Shape.Shape):
             self._offset = value
             self._cache = None
             self.calAABB()
-            
+    
     @property
     def center(self):
         return self.transform.position.add(Vector2.Vector2(*self.offset))

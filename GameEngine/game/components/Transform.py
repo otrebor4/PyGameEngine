@@ -53,21 +53,28 @@ class Transform(Component.Component):
     def parentRotation(self):
         return self.parent.rotation if self.parent else 0
     @parentRotation.setter
-    def parentRoation(self,value):
+    def parentRotation(self,value):
         if self.parent:
-            self.parent.rotatoin = value
+            self.parent.rotation = value
         
     @property
     def position(self):
         if self._parent:
-            return self._parent.position.add(self.localPosition.rotate(self.parent.rotation))
+            return self._parent.position.add(self.localPosition.rotate(self._parent.rotation))
         else:
             return self.localPosition
     @position.setter
     def position(self,value):
         if self._parent:
-            offset = value.rotate(-self.parent.rotation).sub(self._parent.position)
+            offset = value.sub(self._parent.position).rotate(-self.parent.rotation) #.sub(self._parent.position)
             self.localPosition = offset
         else:
             self.localPosition = value
+            
+    @property
+    def parentPosition(self):
+        if self._parent:
+            return self._parent.position
+        return Vector2.Vector2()
+    
     

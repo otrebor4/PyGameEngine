@@ -58,9 +58,9 @@ class Rotate(Component.Component):
     def __init__(self, gameObject):
         Component.Component.__init__(self, gameObject)
         self.angle = 0
-    
+        self.speed = 1
     def update(self,delta):
-        self.angle += delta * 100
+        self.angle += delta * self.speed
         self.transform.rotation = self.angle
         
 def lerp(start,end,lval):
